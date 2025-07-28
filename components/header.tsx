@@ -34,7 +34,7 @@ export function Header() {
       </div>
 
       <div className="mt-4 text-sm text-gray-600">
-        <p>Παρασκευή, 6 Ιουνίου 2025</p>
+        <p>{new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
         <p>Εταιρία: PANEL PRESS S.A | ΑΦΜ: 099363985</p>
         <p>42 ΧΛΜ Ε.Ο ΑΘΗΝΩΝ - ΛΑΜΙΑΣ, ΑΥΛΩΝΑΣ, 19011 ΑΤΤΙΚΗ, Greece</p>
       </div>
