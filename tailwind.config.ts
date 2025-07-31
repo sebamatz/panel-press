@@ -11,6 +11,10 @@ const config: Config = {
     "*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
+  	fontFamily: {
+  		sans: ['var(--font-roboto)', 'Roboto', 'sans-serif'],
+  		mono: ['var(--font-mono)', 'monospace'],
+  	},
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',

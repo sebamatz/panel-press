@@ -1,6 +1,7 @@
 "use client"
 
 import type * as React from "react"
+import Link from "next/link"
 import {
   Home,
   Package,
@@ -32,134 +33,134 @@ import {
 } from "@/components/ui/sidebar"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
-// Menu data
+// Menu data with proper links
 const data = {
   navMain: [
     {
       title: "Αρχική",
-      url: "#",
+      url: "/",
       icon: Home,
     },
     {
       title: "Προϊόντα",
-      url: "#",
+      url: "/products",
       icon: Package,
       items: [
         {
           title: "Πάνελ Αλουμινίου",
-          url: "#",
+          url: "/products/aluminum-panels",
         },
         {
           title: "Κάγκελα Αλουμινίου",
-          url: "#",
+          url: "/products/aluminum-railings",
         },
         {
           title: "Θωρακισμένες Πόρτες",
-          url: "#",
+          url: "/products/armored-doors",
         },
         {
           title: "Πόρτες Αποθήκης",
-          url: "#",
+          url: "/products/storage-doors",
         },
         {
           title: "Πόρτες Πυρασφάλειας",
-          url: "#",
+          url: "/products/fire-doors",
         },
         {
           title: "Επενδύσεις Προφίλ",
-          url: "#",
+          url: "/products/profile-cladding",
         },
       ],
     },
     {
       title: "Σειρές Προϊόντων",
-      url: "#",
+      url: "/series",
       icon: Layers,
       items: [
         {
           title: "Σειρά 5000/7000",
-          url: "#",
+          url: "/series/5000-7000",
         },
         {
           title: "Σειρά 6000 με INOX",
-          url: "#",
+          url: "/series/6000-inox",
         },
         {
           title: "Σειρά 3000 Παραδοσιακά",
-          url: "#",
+          url: "/series/3000-traditional",
         },
         {
           title: "Σειρά 1000 με Κορνίζα",
-          url: "#",
+          url: "/series/1000-frame",
         },
         {
           title: "Σειρά 8000 Geometry",
-          url: "#",
+          url: "/series/8000-geometry",
         },
         {
           title: "ABS Series",
-          url: "#",
+          url: "/series/abs",
         },
       ],
     },
     {
       title: "Παραγγελίες",
-      url: "#",
+      url: "/orders",
       icon: ShoppingCart,
       items: [
         {
           title: "Νέα Παραγγελία",
-          url: "#",
+          url: "/orders/new",
         },
         {
           title: "Ιστορικό Παραγγελιών",
-          url: "#",
+          url: "/orders/history",
         },
         {
           title: "Κατάσταση Παραγγελίας",
-          url: "#",
+          url: "/orders/status",
         },
       ],
     },
     {
       title: "Αναφορές",
-      url: "#",
+      url: "/reports",
       icon: BarChart3,
       items: [
         {
           title: "Πωλήσεις",
-          url: "#",
+          url: "/reports/sales",
         },
         {
           title: "Στατιστικά",
-          url: "#",
+          url: "/reports/statistics",
         },
         {
           title: "Εκθέσεις",
-          url: "#",
+          url: "/reports/exports",
         },
       ],
     },
     {
       title: "Τεκμηρίωση",
-      url: "#",
+      url: "/documentation",
       icon: FileText,
       items: [
         {
           title: "Τεχνικά Φυλλάδια",
-          url: "#",
+          url: "/documentation/technical-sheets",
         },
         {
           title: "Οδηγίες Εγκατάστασης",
-          url: "#",
+          url: "/documentation/installation-guides",
         },
         {
           title: "Χρωματολόγιο RENOLIT",
-          url: "#",
+          url: "/documentation/renolit-colors",
         },
         {
           title: "Πιστοποιητικά",
-          url: "#",
+          url: "/documentation/certificates",
         },
       ],
     },
@@ -167,17 +168,17 @@ const data = {
   navSecondary: [
     {
       title: "Πελάτες",
-      url: "#",
+      url: "/customers",
       icon: Users,
     },
     {
       title: "Επικοινωνία",
-      url: "#",
+      url: "/contact",
       icon: Phone,
     },
     {
       title: "Ρυθμίσεις",
-      url: "#",
+      url: "/settings",
       icon: Settings,
     },
   ],
@@ -187,7 +188,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-2">
+        <Link href="/" className="flex items-center gap-2 px-2 py-2">
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-green-600 text-white">
             <Package className="size-4" />
           </div>
@@ -195,7 +196,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <span className="truncate font-semibold">Panel Press S.A</span>
             <span className="truncate text-xs text-muted-foreground">Aluminum Systems</span>
           </div>
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
@@ -220,9 +221,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             {item.items?.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.title}>
                                 <SidebarMenuSubButton asChild>
-                                  <a href={subItem.url}>
+                                  <Link href={subItem.url}>
                                     <span>{subItem.title}</span>
-                                  </a>
+                                  </Link>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ))}
@@ -231,10 +232,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       </>
                     ) : (
                       <SidebarMenuButton asChild tooltip={item.title}>
-                        <a href={item.url}>
+                        <Link href={item.url}>
                           <item.icon />
                           <span>{item.title}</span>
-                        </a>
+                        </Link>
                       </SidebarMenuButton>
                     )}
                   </SidebarMenuItem>
@@ -250,10 +251,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               {data.navSecondary.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild size="sm" tooltip={item.title}>
-                    <a href={item.url}>
+                    <Link href={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -266,7 +267,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#" className="font-normal">
+              <Link href="/profile" className="font-normal">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-green-600 text-white text-xs">
                   TM
                 </div>
@@ -274,7 +275,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <span className="truncate font-semibold">Τάσος Μουζάκης</span>
                   <span className="truncate text-xs text-muted-foreground">tasos@panelpress.gr</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

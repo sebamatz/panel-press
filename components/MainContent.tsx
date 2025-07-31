@@ -79,16 +79,6 @@ export function MainContent({ category }: MainContentProps) {
           </Card>
         ))}
       </div>
-
-      <Card className="bg-green-50 border-green-200">
-        <CardContent className="p-6">
-          <h3 className="font-bold text-green-800 mb-2">Πληροφορίες Παραγγελίας</h3>
-          <p className="text-sm text-green-700">
-            Για παραγγελίες και περισσότερες πληροφορίες επικοινωνήστε με τον υπεύθυνο πωλήσεων σας ή χρησιμοποιήστε το
-            σύστημα ηλεκτρονικών παραγγελιών.
-          </p>
-        </CardContent>
-      </Card>
     </div>
   )
 }

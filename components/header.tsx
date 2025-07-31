@@ -1,6 +1,9 @@
-import { Bell, User, Search } from "lucide-react"
+"use client"
+
+import { Search, Bell, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 
@@ -24,19 +27,11 @@ export function Header() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input placeholder="Αναζήτηση προϊόντων..." className="pl-10 w-64" />
           </div>
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" />
-          </Button>
+  
           <Button variant="ghost" size="icon">
             <User className="h-5 w-5" />
           </Button>
         </div>
-      </div>
-
-      <div className="mt-4 text-sm text-gray-600">
-        <p>{new Date().toLocaleDateString('el-GR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-        <p>Εταιρία: PANEL PRESS S.A | ΑΦΜ: 099363985</p>
-        <p>42 ΧΛΜ Ε.Ο ΑΘΗΝΩΝ - ΛΑΜΙΑΣ, ΑΥΛΩΝΑΣ, 19011 ΑΤΤΙΚΗ, Greece</p>
       </div>
     </header>
   )

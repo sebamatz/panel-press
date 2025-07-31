@@ -121,38 +121,6 @@ export function ProductGrid() {
           </div>
         </div>
       </div>
-
-      <div className="mt-8 md:mt-12 bg-yellow-50 border border-yellow-200 rounded-lg p-4 md:p-6 mx-4">
-        <h2 className="font-bold text-base md:text-lg mb-4">Αγαπητέ συνεργάτη</h2>
-        <div className="space-y-3 md:space-y-4">
-          <p className="text-xs md:text-sm text-gray-700">
-            Τώρα μπορείτε να <strong>εξοφλήσετε την οφειλή σας</strong> χρησιμοποιώντας τον 25ψήφιο
-            <strong> Κωδικό Ηλεκτρονικής Πληρωμής RF</strong>, ο οποίος αναγράφεται στις ηλεκτρονικές ενημερώσεις μέσω
-            email και στα έντυπα ή ηλεκτρονικά παραστατικά.
-          </p>
-          <p className="text-xs md:text-sm text-gray-700">
-            Επιπλέον, μέσω της επιλογής <strong>«ΠΛΗΡΩΜΕΣ»</strong> από το πάνω αριστερό menu στο portal, έχετε ακόμα
-            την δυνατότητα
-            <strong> επεκόνισής του κωδικού και ως QR</strong>, οπότε η πληρωμή μπορεί να γίνει σκανάροντας τον από το
-            mobile banking των τραπεζών που το παρέχουν.
-          </p>
-        </div>
-      </div>
-
-      <footer className="mt-8 md:mt-12 bg-gray-100 border-t border-gray-200 rounded-lg p-4 md:p-6 mx-4">
-        <div className="text-center">
-          <h3 className="font-bold text-base md:text-lg text-gray-900 mb-2">PANEL PRESS S.A</h3>
-          <div className="text-xs md:text-sm text-gray-600 space-y-1">
-            <p>
-              <strong>ΑΦΜ:</strong> 099363985
-            </p>
-            <p>
-              <strong>Διεύθυνση:</strong> 42 ΧΛΜ Ε.Ο ΑΘΗΝΩΝ - ΛΑΜΙΑΣ, ΑΥΛΩΝΑΣ
-            </p>
-            <p>19011 ΑΤΤΙΚΗ, Greece</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
