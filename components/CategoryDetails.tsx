@@ -9,6 +9,8 @@ import { InfoCard } from "@/components/ui/InfoCard"
 import { StatusCard } from "@/components/ui/StatusCard"
 import { Section } from "@/components/ui/Section"
 import { useCategoryDetails } from "@/lib/redux-hooks"
+import { ProductCombobox, ComboboxItem } from "@/components/ui/combobox"
+import * as React from "react"
 
 interface CategoryDetailsProps {
   categoryId: string | number
@@ -18,6 +20,7 @@ interface CategoryDetailsProps {
 
 export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: CategoryDetailsProps) {
   const { details, loading, error } = useCategoryDetails(categoryId)
+  const [selectedItem, setSelectedItem] = React.useState<ComboboxItem | null>(null)
 
   if (loading) {
     return (
@@ -84,25 +87,52 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
         </Card>
       )}
 
-      {/* Show items if available */}
+      {/* Show combobox if items are available */}
       {hasApiItems ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((item: any, index: number) => (
-            <Card key={item.id || index} className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center space-x-2">
-                    <Package className="h-5 w-5 text-green-600" />
-                    <h3 className="font-medium text-gray-900 text-sm md:text-base">{item.name}</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-gray-900">Επιλέξτε Προϊόν</h2>
+            <Badge variant="secondary">{items.length} προϊόντα διαθέσιμα</Badge>
+          </div>
+          
+          <ProductCombobox
+            products={items}
+            value={selectedItem}
+            onValueChange={setSelectedItem}
+            loading={loading}
+          />
+
+          {/* Show selected item details */}
+          {selectedItem && (
+            <Card className="mt-4 border-green-200 bg-green-50">
+              <CardHeader>
+                <CardTitle className="text-green-800">Επιλεγμένο Προϊόν</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <Package className="h-6 w-6 text-green-600" />
+                    <div>
+                      <h3 className="font-medium text-green-900">{selectedItem.name}</h3>
+                      {selectedItem.description && (
+                        <p className="text-sm text-green-700 mt-1">{selectedItem.description}</p>
+                      )}
+                    </div>
                   </div>
-                  <Badge variant="secondary" className="text-xs">
-                    Νέο
-                  </Badge>
+                  <div className="flex space-x-2">
+                    <Button size="sm" variant="outline">
+                      <Eye className="h-4 w-4 mr-2" />
+                      Προβολή
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      Προσθήκη
+                    </Button>
+                  </div>
                 </div>
-             
               </CardContent>
             </Card>
-          ))}
+          )}
         </div>
       ) : (
         /* Show no data message when API returns empty items */
@@ -119,7 +149,6 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
           </div>
         </StatusCard>
       )}
-
 
       {/* Enhanced Debug information - remove in production */}
       {process.env.NODE_ENV === "development" && (

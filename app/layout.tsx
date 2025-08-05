@@ -5,6 +5,8 @@ import { ThemeProvider } from '@/components/ThemeProvider'
 import { ReduxProvider } from '@/store/provider'
 import { Toaster } from '@/components/ui/sonner'
 import { Footer } from '@/components/Footer'
+import { AppSidebar } from '@/components/AppSidebar'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 
 // Configure Roboto font
 const roboto = Roboto({
@@ -44,12 +46,17 @@ html {
           disableTransitionOnChange
         >
           <ReduxProvider>
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <SidebarProvider>
+              <AppSidebar />
+              <SidebarInset>
+                <div className="min-h-screen flex flex-col">
+                  <main className="flex-1">
+                    {children}
+                  </main>
+                  <Footer />
+                </div>
+              </SidebarInset>
+            </SidebarProvider>
             <Toaster />
           </ReduxProvider>
         </ThemeProvider>

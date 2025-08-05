@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 
 import { handleAPIError, handleSuccess } from '@/lib/toast'
+import { processApiData } from '@/components/category/CategoryDataProcessor'
 
 // API configuration
 const API_BASE_URL = "https://www.alfaeorders.com:19443/erpapi"
@@ -193,7 +194,7 @@ export const fetchCategoryDetails = createAsyncThunk(
         id: categoryId,
         name: data.name || data.Name || data.title || data.Title || `Category ${categoryId}`,
         description: data.description || data.Description || data.desc || "",
-        items: items,
+        items: processApiData(items),
         ...data,
       }
 

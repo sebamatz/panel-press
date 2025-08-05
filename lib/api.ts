@@ -30,6 +30,18 @@ export interface CategoryDetails {
   [key: string]: any // For additional properties from the API
 }
 
+export interface ProductDetails {
+  id: string | number
+  name: string
+  description?: string
+  specifications?: any[]
+  images?: string[]
+  price?: number
+  code?: string
+  category?: string
+  [key: string]: any // For additional properties from the API
+}
+
 export async function getBaseCategories(): Promise<ApiResponse<CategoryItem[]>> {
   const endpoint = "/getitems/obj"
   const payload = {
@@ -166,6 +178,63 @@ export async function getCategoryDetails(categoryId: string | number): Promise<A
   }
 }
 
+export async function getProductDetails(productId: string | number, categoryId: string | number = 1): Promise<ApiResponse<ProductDetails>> {
+  const endpoint = "/getitems/obj"
+  const payload = {
+    Company: 20,
+    BOption: 70,
+    id: categoryId,
+    LastId: productId,
+  }
+
+  try {
+    const url = `${API_BASE_URL}${endpoint}?pars=${encodeURIComponent(JSON.stringify(payload))}`
+
+    console.log("Fetching product details from:", url)
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+
+    if (!response.ok) {
+      const errorMsg = `HTTP error! status: ${response.status}`
+      throw new Error(errorMsg)
+    }
+
+    const data = await response.json()
+    console.log("Product details response:", data)
+
+    // Process the response
+    const details: ProductDetails = {
+      id: productId,
+      name: data.name || data.Name || data.title || data.Title || `Product ${productId}`,
+      description: data.description || data.Description || data.desc || "",
+      specifications: data.specifications || data.Specifications || data.specs || [],
+      images: data.images || data.Images || data.image || [],
+      price: data.price || data.Price || data.cost || data.Cost,
+      code: data.code || data.Code || data.productCode || data.ProductCode,
+      category: data.category || data.Category || data.categoryName || data.CategoryName,
+      ...data,
+    }
+
+    return {
+      success: true,
+      data: details,
+    }
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred"
+    
+    return {
+      success: false,
+      error: errorMessage,
+    }
+  }
+}
+
 export function useBaseCategories() {
   const [categories, setCategories] = useState<CategoryItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -228,6 +297,40 @@ export function useCategoryDetails(categoryId: string | number | null) {
   useEffect(() => {
     fetchDetails()
   }, [categoryId])
+
+  return { details, loading, error, refetch: fetchDetails }
+}
+
+export function useProductDetails(productId: string | number | null, categoryId: string | number = 1) {
+  const [details, setDetails] = useState<ProductDetails | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchDetails = async () => {
+    if (!productId) return
+
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const result = await getProductDetails(productId, categoryId)
+      
+      if (result.success && result.data) {
+        setDetails(result.data)
+      } else {
+        setError(result.error || "Failed to fetch product details")
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Unknown error occurred"
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchDetails()
+  }, [productId, categoryId])
 
   return { details, loading, error, refetch: fetchDetails }
 }
