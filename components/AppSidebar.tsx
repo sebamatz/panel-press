@@ -203,7 +203,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupLabel>Κύριο Μενού</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            {/* <SidebarMenu>
               {data.navMain.map((item) => (
                 <Collapsible key={item.title} asChild defaultOpen={item.title === "Προϊόντα"}>
                   <SidebarMenuItem>
@@ -241,7 +241,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   </SidebarMenuItem>
                 </Collapsible>
               ))}
-            </SidebarMenu>
+            </SidebarMenu> */}
           </SidebarGroupContent>
         </SidebarGroup>
 

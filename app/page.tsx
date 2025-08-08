@@ -2,7 +2,7 @@
 
 import { Header } from "@/components/header"
 import { DynamicProductGrid } from "@/components/ProductGrid"
-import { ReduxDebug } from "@/components/ReduxDebug"
+import { RTKQueryDebug } from "@/components/RTKQueryDebug"
 import { ToastDemo } from "@/components/ToastDemo"
 import { useGlobalErrorHandler } from "@/hooks/useGlobalErrorHandler"
 
@@ -12,10 +12,12 @@ export default function PanelPressPortal() {
 
   return (
     <>
-      <ReduxDebug />
       <Header />
       <main className="flex-1 p-6">
-        <DynamicProductGrid />
+        <div className="space-y-6">
+          <RTKQueryDebug />
+          <DynamicProductGrid />
+        </div>
       </main>
     </>
   )

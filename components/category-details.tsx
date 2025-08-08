@@ -8,7 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { InfoCard } from "@/components/ui/info-card"
 import { StatusCard } from "@/components/ui/status-card"
 import { Section } from "@/components/ui/section"
-import { useCategoryDetails } from "@/lib/redux-hooks"
+import { useGetCategoryDetailsQuery } from "@/lib/api"
 
 interface CategoryDetailsProps {
   categoryId: string | number
@@ -17,7 +17,7 @@ interface CategoryDetailsProps {
 }
 
 export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: CategoryDetailsProps) {
-  const { details, loading, error } = useCategoryDetails(categoryId)
+  const { data: details, isLoading: loading, error } = useGetCategoryDetailsQuery(categoryId)
 
   if (loading) {
     return (
@@ -50,7 +50,7 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
         </div>
 
         <Alert className="max-w-md mx-auto">
-          <AlertDescription>Σφάλμα κατά τη φόρτωση των λεπτομερειών: {error}</AlertDescription>
+          <AlertDescription>Σφάλμα κατά τη φόρτωση των λεπτομερειών: {error ? (typeof error === 'string' ? error : 'Unknown error') : 'Unknown error'}</AlertDescription>
         </Alert>
       </div>
     )

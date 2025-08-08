@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 import { Shield, Home, Lock, Flame, Layers, Fence, Package, Loader2 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useBaseCategories } from "@/lib/redux-hooks"
+import { useGetBaseCategoriesQuery } from "@/lib/api"
 
 // Icon mapping function
 function getIconForCategory(categoryName: string) {
@@ -41,7 +41,7 @@ function getColorForCategory(index: number) {
 }
 
 export function DynamicProductGrid() {
-  const { categories, loading, error } = useBaseCategories()
+  const { data: categories = [], isLoading: loading, error } = useGetBaseCategoriesQuery()
   const router = useRouter()
 
   const handleCategoryClick = (categoryId: string | number) => {
@@ -90,7 +90,7 @@ export function DynamicProductGrid() {
 
         <Alert className="mt-4 max-w-2xl mx-auto">
           <AlertDescription>
-            <strong>Σφάλμα κατά τη φόρτωση των κατηγοριών:</strong> {error}
+            <strong>Σφάλμα κατά τη φόρτωση των κατηγοριών:</strong> {error ? (typeof error === 'string' ? error : 'Unknown error') : 'Unknown error'}
             <br />
             <br />
             <strong>API Call:</strong>

@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation"
 import { Shield, Home, Lock, Flame, Layers, Fence, Package, Loader2 } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useBaseCategories } from "@/lib/redux-hooks"
+import { useGetBaseCategoriesQuery } from "@/lib/api"
 
 // Icon mapping function
 function getIconForCategory(categoryName: string) {
@@ -41,7 +41,7 @@ function getColorForCategory(index: number) {
 }
 
 export function DynamicProductGrid() {
-  const { categories, loading, error } = useBaseCategories()
+  const { data: categories = [], isLoading: loading, error } = useGetBaseCategoriesQuery()
   const router = useRouter()
 
   const handleCategoryClick = (categoryId: string | number) => {

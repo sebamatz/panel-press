@@ -6,7 +6,7 @@ interface CategoryProductSelectorProps {
   onProductSelect?: (productId: string | number | null) => void
 }
 
-export function CategoryProductSelector({ 
+export function CategoryProductList({ 
   products, 
   onProductSelect 
 }: CategoryProductSelectorProps) {
@@ -25,19 +25,6 @@ export function CategoryProductSelector({
         onValueChange={handleProductSelect} 
         products={products} 
       />
-      
-      {selectedItem && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-900">Selected Product:</h3>
-          <p className="text-gray-600">{selectedItem.name}</p>
-          {selectedItem.description && (
-            <p className="text-sm text-gray-500 mt-1">{selectedItem.description}</p>
-          )}
-          {selectedItem.code && (
-            <p className="text-sm text-gray-500">Code: {selectedItem.code}</p>
-          )}
-        </div>
-      )}
     </div>
   )
 } 

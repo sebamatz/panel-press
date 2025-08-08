@@ -1,4 +1,4 @@
-import { useProductDetails } from "@/lib/api"
+import { useGetProductDetailsQuery } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Package, AlertCircle } from "lucide-react"
@@ -9,25 +9,53 @@ import { Combobox } from "../ui/combobox"
 interface ProductDetailsPanelProps {
   productId: string | number | null
   categoryId: string | number
+  onSelectionChange?: (selectedItem: any) => void
+  enabled?: boolean
 }
 
-export function ProductDetailsPanel({ productId, categoryId }: ProductDetailsPanelProps) {
-  const { details, loading, error } = useProductDetails(productId, categoryId)
+export function ProductDetailsList({ productId, categoryId, onSelectionChange, enabled = true }: ProductDetailsPanelProps) {
+  const { data: details, isLoading: loading, error } = useGetProductDetailsQuery(
+    { productId: productId!, categoryId },
+    { skip: !productId || !enabled }
+  )
   const [selectedItem, setSelectedItem] = useState<any>(null)
 
-  if (!productId) {
+  const handleSelectionChange = (item: any) => {
+    setSelectedItem(item)
+    onSelectionChange?.(item)
+  }
+
+  // If disabled, show disabled state
+  if (!enabled) {
     return (
-      <Card className="bg-gray-50 border-gray-200">
-        <CardContent className="p-6 text-center">
-          <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="font-medium text-gray-900 mb-2">Επιλέξτε Προϊόν</h3>
-          <p className="text-sm text-gray-600">
-            Επιλέξτε ένα προϊόν από τη λίστα για να δείτε τις λεπτομερείς του.
-          </p>
-        </CardContent>
-      </Card>
+      <div className="space-y-4">
+        <h2 className="text-lg font-bold">Λεπτομέρειες Προϊόντος</h2>
+        <Card className="bg-gray-50 border-gray-200">
+          <CardContent className="p-6 text-center">
+            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="font-medium text-gray-900 mb-2">Απενεργοποιημένο</h3>
+            <p className="text-sm text-gray-600">
+              Επιλέξτε ένα προϊόν από τον πίνακα παραγγελιών για να ενεργοποιήσετε
+            </p>
+          </CardContent>
+        </Card>
+      </div>
     )
   }
+
+  // if (!productId) {
+  //   return (
+  //     <Card className="bg-gray-50 border-gray-200">
+  //       <CardContent className="p-6 text-center">
+  //         <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+  //         <h3 className="font-medium text-gray-900 mb-2">Επιλέξτε Προϊόν</h3>
+  //         <p className="text-sm text-gray-600">
+  //           Επιλέξτε ένα προϊόν από τη λίστα για να δείτε τις λεπτομερείς του.
+  //         </p>
+  //       </CardContent>
+  //     </Card>
+  //   )
+  // }
 
   if (loading) {
     return (
@@ -49,7 +77,7 @@ export function ProductDetailsPanel({ productId, categoryId }: ProductDetailsPan
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              <strong>Σφάλμα κατά τη φόρτωση των λεπτομερειών:</strong> {error}
+              <strong>Σφάλμα κατά τη φόρτωση των λεπτομερειών:</strong> {error ? (typeof error === 'string' ? error : 'Unknown error') : 'Unknown error'}
             </AlertDescription>
           </Alert>
         </CardContent>
@@ -84,14 +112,16 @@ export function ProductDetailsPanel({ productId, categoryId }: ProductDetailsPan
   }))
 
   return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-bold">Λεπτομέρειες Προϊόντος</h2>
     <Card>
       <Combobox
         title="Επιλέξτε Προϊόν"
         value={selectedItem}
-        onValueChange={setSelectedItem}
+        onValueChange={handleSelectionChange}
         items={apiItems}
-
       />
     </Card>
+    </div>
   )
 } 
