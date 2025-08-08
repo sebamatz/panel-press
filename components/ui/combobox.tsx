@@ -172,10 +172,10 @@ export function Combobox({
               </CommandGroup>
             ) : (
               <CommandGroup>
-                {Object.values(items).map((item) => (
+                {Object.values(items).map((item: any) => (
                   <CommandItem
-                    key={item.id}
-                    value={item.name}
+                    key={item?.id}
+                    value={item?.id}
                     onSelect={handleSelect}
                     className="p-0"
                   >

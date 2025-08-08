@@ -81,8 +81,7 @@ export default function CategoryDetailsPage() {
                      products={apiItems} 
                   onProductSelect={handleProductSelect}
                 />
-                </div>
-              
+                </div>              
               {/* Product Details Panel */}
               <div>
                 <ProductDetailsPanel productId={selectedProductId} categoryId={categoryId} />

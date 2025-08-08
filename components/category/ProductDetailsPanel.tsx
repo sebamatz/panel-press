@@ -13,7 +13,7 @@ interface ProductDetailsPanelProps {
 
 export function ProductDetailsPanel({ productId, categoryId }: ProductDetailsPanelProps) {
   const { details, loading, error } = useProductDetails(productId, categoryId)
-  const [selectedItem, setSelectedItem] = useState<any>(null) 
+  const [selectedItem, setSelectedItem] = useState<any>(null)
 
   if (!productId) {
     return (
@@ -72,16 +72,26 @@ export function ProductDetailsPanel({ productId, categoryId }: ProductDetailsPan
   }
 
   // Use the processed items directly from the Redux store
-  const apiItems = details?.items || []
+
+  // is object
+
+  const apiItems = Object.values(details).map((item: any, index: number) => ({
+    id: item?.sku,
+    name: item?.sku,
+    description: item?.webName,
+    code: item?.sku,
+    icon: <Package className="h-4 w-4" />,
+  }))
 
   return (
     <Card>
-         <Combobox 
-    title="Επιλέξτε Προϊόν" 
-    value={selectedItem} 
-    onValueChange={setSelectedItem} 
-    items={apiItems} 
-  />
+      <Combobox
+        title="Επιλέξτε Προϊόν"
+        value={selectedItem}
+        onValueChange={setSelectedItem}
+        items={apiItems}
+
+      />
     </Card>
   )
 } 
