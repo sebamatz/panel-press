@@ -64,10 +64,9 @@ export function ProductDetailsList({ productId, categoryId, onSelectionChange, e
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold">Λεπτομέρειες Προϊόντος</h2>
+      <h2 className="text-lg font-bold">Προϊόντα - κωδικοί</h2>
     <Card>
       <Combobox
-        disabled={!enabled}
         title="Επιλέξτε Προϊόν"
         value={selectedItem}
         onValueChange={handleSelectionChange}

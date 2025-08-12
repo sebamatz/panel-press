@@ -262,25 +262,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link href="/profile" className="font-normal">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-green-600 text-white text-xs">
-                  TM
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Τάσος Μουζάκης</span>
-                  <span className="truncate text-xs text-muted-foreground">tasos@panelpress.gr</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
-
       <SidebarRail />
     </Sidebar>
   )

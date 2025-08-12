@@ -159,9 +159,9 @@ export function Combobox({
             {/* check if items is an array or object */}
             {Array.isArray(items) ? (
               <CommandGroup>
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <CommandItem
-                    key={item.id}
+                    key={index}
                     value={item.name}
                     onSelect={handleSelect}
                     className="p-0"
@@ -172,9 +172,9 @@ export function Combobox({
               </CommandGroup>
             ) : (
               <CommandGroup>
-                {Object.values(items).map((item: any) => (
+                {Object.values(items).map((item: any, index: number) => (
                   <CommandItem
-                    key={item?.id}
+                    key={index}
                     value={item?.id}
                     onSelect={handleSelect}
                     className="p-0"
