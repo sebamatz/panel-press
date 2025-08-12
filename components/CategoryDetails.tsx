@@ -85,7 +85,7 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
       {hasApiItems ? (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Επιλέξτε Προϊόν</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Επιλέξτε  Κατηγορία</h2>
             <Badge variant="secondary">{items.length} προϊόντα διαθέσιμα</Badge>
           </div>
           
@@ -100,7 +100,7 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
           {selectedItem && (
             <Card className="mt-4 border-green-200 bg-green-50">
               <CardHeader>
-                <CardTitle className="text-green-800">Επιλεγμένο Προϊόν</CardTitle>
+                <CardTitle className="text-green-800">Επιλεγμένη Κατηγορία</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">

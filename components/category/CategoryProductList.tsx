@@ -20,7 +20,7 @@ export function CategoryProductList({
   return (
     <div className="space-y-4">
       <ProductCombobox 
-        title="Επιλέξτε Προϊόν" 
+        title="Επιλέξτε Κατηγορία"  
         value={selectedItem} 
         onValueChange={handleProductSelect} 
         products={products} 
