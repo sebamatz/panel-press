@@ -62,18 +62,6 @@ export function DynamicProductGrid() {
           <Loader2 className="h-8 w-8 animate-spin text-green-600" />
           <span className="ml-2 text-gray-600">Φόρτωση δεδομένων από το ERP σύστημα...</span>
         </div>
-
-        <Card className="bg-blue-50 border-blue-200 mx-4">
-          <CardContent className="p-4">
-            <h3 className="font-semibold text-blue-800 mb-2">API Call Info</h3>
-            <p className="text-sm text-blue-700">
-              <strong>Endpoint:</strong> https://www.alfaeorders.com:19443/erpapi/getitems/obj
-            </p>
-            <p className="text-sm text-blue-700">
-              <strong>Payload:</strong> {`{Company: 20, BOption: 70}`}
-            </p>
-          </CardContent>
-        </Card>
       </div>
     )
   }
@@ -136,12 +124,7 @@ export function DynamicProductGrid() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="text-center mb-8 px-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-          Καλώς ήρθατε στο Portal της Panel Press S.A
-        </h1>
-        <p className="text-gray-600 text-sm md:text-base">Επιλέξτε κατηγορία προϊόντων για να συνεχίσετε</p>
-      </div>
+  
 
       {/* API Success Info */}
       <Card className="bg-green-50 border-green-200 mx-4">

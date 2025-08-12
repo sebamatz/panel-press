@@ -33,25 +33,11 @@ export const createColumns = (
       return (
         <div className="space-y-1">
           <div className="font-medium">{product.code}</div>
-          <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
-            {product.name}
-          </div>
         </div>
       )
     },
   },
-  {
-    accessorKey: "specialRemarks",
-    header: "Ειδικές παρατηρήσεις μόνο για την κατασκευή",
-    cell: ({ row }) => {
-      return (
-        <Input 
-          placeholder="Ειδικές παρατηρήσεις..."
-          className="w-full"
-        />
-      )
-    },
-  },
+ 
   {
     accessorKey: "dimension",
     header: "ΔΙΑΣΤΑΣΗ",
@@ -59,7 +45,6 @@ export const createColumns = (
       return (
         <div className="space-y-2">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-gray-200 rounded"></div>
             <Select defaultValue="90 x 210">
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -72,11 +57,7 @@ export const createColumns = (
               </SelectContent>
             </Select>
           </div>
-          <div className="text-xs text-gray-500 space-y-1">
-            <div>100 x 200</div>
-            <div>100 x 225</div>
-            <div>125 x 250</div>
-          </div>
+  
         </div>
       )
     },
@@ -88,7 +69,6 @@ export const createColumns = (
       return (
         <div className="space-y-2">
           <div className="space-y-1">
-            <div className="text-xs text-gray-600">Τύπος:</div>
             <Select defaultValue="ΛΕΥΚΟ (9010)">
               <SelectTrigger className="w-40">
                 <SelectValue />
@@ -96,24 +76,8 @@ export const createColumns = (
               <SelectContent>
                 <SelectItem value="ΛΕΥΚΟ (9010)">ΛΕΥΚΟ (9010)</SelectItem>
                 <SelectItem value="ΜΑΥΡΟ (9005)">ΜΑΥΡΟ (9005)</SelectItem>
-                <SelectItem value="ΚΑΦΕ (8017)">ΚΑΦΕ (8017)</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="space-y-1">
-            <Select defaultValue="Biopanel">
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Biopanel">Biopanel</SelectItem>
-                <SelectItem value="Standard">Standard</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="text-xs text-gray-500 space-y-1">
-            <div>x ΡΩΜΑ:</div>
-            <div>ΒΑΦΕΙΟ:</div>
           </div>
         </div>
       )
@@ -131,10 +95,19 @@ export const createColumns = (
             className="w-16"
             min="1"
           />
-          <Button variant="outline" size="sm">
-            Προεπισκόπηση
-          </Button>
         </div>
+      )
+    },
+  },
+  {
+    accessorKey: "specialRemarks",
+    header: "Παρατηρήσεις",
+    cell: ({ row }) => {
+      return (
+        <Input 
+          placeholder="Ειδικές παρατηρήσεις..."
+          className="w-full"
+        />
       )
     },
   },

@@ -10,6 +10,7 @@ import { Shield, Home, Lock, Flame, Layers, Fence, Package, Loader2 } from "luci
 import { Card, CardContent } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useGetBaseCategoriesQuery } from "@/lib/api"
+import { CategoryLoadingState } from "./category/CategoryLoadingState"
 
 // Icon mapping function
 function getIconForCategory(categoryName: string) {
@@ -44,37 +45,13 @@ export function DynamicProductGrid() {
   const { data: categories = [], isLoading: loading, error } = useGetBaseCategoriesQuery()
   const router = useRouter()
 
-  const handleCategoryClick = (categoryId: string | number) => {
-    router.push(`/category/${categoryId}`)
+  const handleCategoryClick = (categoryId: string | number, categoryName: string) => {
+    router.push(`/category/${categoryId}?categoryName=${categoryName}`)
   }
 
   if (loading) {
     return (
-      <div className="space-y-6 max-w-7xl mx-auto">
-        <div className="text-center mb-8 px-4">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            Καλώς ήρθατε στο Portal της Panel Press S.A
-          </h1>
-          <p className="text-gray-600 text-sm md:text-base">Φόρτωση κατηγοριών προϊόντων από ERP σύστημα...</p>
-        </div>
-
-        <div className="flex justify-center items-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-green-600" />
-          <span className="ml-2 text-gray-600">Φόρτωση δεδομένων από το ERP σύστημα...</span>
-        </div>
-
-        <Card className="bg-blue-50 border-blue-200 mx-4">
-          <CardContent className="p-4">
-            <h3 className="font-semibold text-blue-800 mb-2">API Call Info</h3>
-            <p className="text-sm text-blue-700">
-              <strong>Endpoint:</strong> https://www.alfaeorders.com:19443/erpapi/getitems/obj
-            </p>
-            <p className="text-sm text-blue-700">
-              <strong>Payload:</strong> {`{Company: 20, BOption: 70}`}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <CategoryLoadingState categoryId={""} onBack={() => {}} />
     )
   }
 
@@ -136,13 +113,6 @@ export function DynamicProductGrid() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      <div className="text-center mb-8 px-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-          Καλώς ήρθατε στο Portal της Panel Press S.A
-        </h1>
-        <p className="text-gray-600 text-sm md:text-base">Επιλέξτε κατηγορία προϊόντων για να συνεχίσετε</p>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 px-4">
         {categories.map((category, index) => {
           const IconComponent = getIconForCategory(category.name || "")
@@ -152,7 +122,7 @@ export function DynamicProductGrid() {
             <Card
               key={category.id}
               className="cursor-pointer hover:shadow-lg transition-shadow"
-              onClick={() => handleCategoryClick(category.id)}
+              onClick={() => handleCategoryClick(category.id, category.name || "")}
             >
               <CardContent className="p-4 md:p-6 text-center">
                 <div

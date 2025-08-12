@@ -20,9 +20,6 @@ export function CategoryDetailsHeader({
         Επιστροφή
       </Button>
       <h1 className="text-xl md:text-2xl font-bold text-gray-900">{categoryName}</h1>
-      <Badge variant="outline" className="text-xs">
-        ID: {categoryId}
-      </Badge>
     </div>
   )
 } 

@@ -25,38 +25,6 @@ export function ProductDetailsList({ productId, categoryId, onSelectionChange, e
     onSelectionChange?.(item)
   }
 
-  // If disabled, show disabled state
-  if (!enabled) {
-    return (
-      <div className="space-y-4">
-        <h2 className="text-lg font-bold">Λεπτομέρειες Προϊόντος</h2>
-        <Card className="bg-gray-50 border-gray-200">
-          <CardContent className="p-6 text-center">
-            <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="font-medium text-gray-900 mb-2">Απενεργοποιημένο</h3>
-            <p className="text-sm text-gray-600">
-              Επιλέξτε ένα προϊόν από τον πίνακα παραγγελιών για να ενεργοποιήσετε
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
-
-  // if (!productId) {
-  //   return (
-  //     <Card className="bg-gray-50 border-gray-200">
-  //       <CardContent className="p-6 text-center">
-  //         <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-  //         <h3 className="font-medium text-gray-900 mb-2">Επιλέξτε Προϊόν</h3>
-  //         <p className="text-sm text-gray-600">
-  //           Επιλέξτε ένα προϊόν από τη λίστα για να δείτε τις λεπτομερείς του.
-  //         </p>
-  //       </CardContent>
-  //     </Card>
-  //   )
-  // }
-
   if (loading) {
     return (
       <Card>
@@ -85,25 +53,8 @@ export function ProductDetailsList({ productId, categoryId, onSelectionChange, e
     )
   }
 
-  if (!details) {
-    return (
-      <Card className="bg-gray-50 border-gray-200">
-        <CardContent className="p-6 text-center">
-          <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="font-medium text-gray-900 mb-2">Δεν βρέθηκαν λεπτομερείς</h3>
-          <p className="text-sm text-gray-600">
-            Δεν ήταν δυνατή η φόρτωση των λεπτομερειών για αυτό το προϊόν.
-          </p>
-        </CardContent>
-      </Card>
-    )
-  }
 
-  // Use the processed items directly from the Redux store
-
-  // is object
-
-  const apiItems = Object.values(details).map((item: any, index: number) => ({
+  const apiItems = Object.values(details || {}).map((item: any, index: number) => ({
     id: item?.sku,
     name: item?.sku,
     description: item?.webName,
@@ -116,6 +67,7 @@ export function ProductDetailsList({ productId, categoryId, onSelectionChange, e
       <h2 className="text-lg font-bold">Λεπτομέρειες Προϊόντος</h2>
     <Card>
       <Combobox
+        disabled={!enabled}
         title="Επιλέξτε Προϊόν"
         value={selectedItem}
         onValueChange={handleSelectionChange}

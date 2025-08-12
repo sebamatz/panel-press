@@ -10,6 +10,7 @@ import { StatusCard } from "@/components/ui/StatusCard"
 import { Section } from "@/components/ui/Section"
 import { useGetCategoryDetailsQuery } from "@/lib/api"
 import { ProductCombobox, ComboboxItem } from "@/components/ui/combobox"
+import { CategoryDetailsHeader } from "./category/CategoryDetailsHeader"
 import * as React from "react"
 
 interface CategoryDetailsProps {
@@ -67,14 +68,7 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto px-4">
-      <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={onBack}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Επιστροφή
-        </Button>
-        <h1 className="text-xl md:text-2xl font-bold text-gray-900">{details?.name || categoryName}</h1>
-        <Badge variant="outline">ID: {categoryId}</Badge>
-      </div>
+    <CategoryDetailsHeader categoryId={categoryId} categoryName={categoryName} onBack={onBack} /> 
 
       {details?.description && (
         <Card>

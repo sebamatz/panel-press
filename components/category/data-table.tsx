@@ -43,11 +43,11 @@ export function DataTable({
   return (
     <div className="space-y-4">
       {/* Note section */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+      {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
         <p className="text-sm text-yellow-800">
           Σημείωση: Οι τιμές που εμφανίζονται αφορούν μόνο τα πάνελ (όχι λαβές, διακοσμητικά κτλ)
         </p>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="overflow-hidden rounded-md border">
