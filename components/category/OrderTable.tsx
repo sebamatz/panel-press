@@ -115,12 +115,12 @@ export function OrderTable({ productId, selectedProductDetails, onEnableProductD
             <div className="space-y-4">
               {selectedProducts.map((product) => (
                 <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1">
+                  {/* <div className="flex-1">
                     <div className="font-medium">{product.code} - {product.name}</div>
                     <div className="text-sm text-gray-600">
                       {product.dimension} | {product.color} | {product.paintShop}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">Ποσότητα:</span>
