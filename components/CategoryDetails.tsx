@@ -150,50 +150,6 @@ export function CategoryDetailsComponent({ categoryId, categoryName, onBack }: C
         </StatusCard>
       )}
 
-      {/* Enhanced Debug information - remove in production */}
-      {process.env.NODE_ENV === "development" && (
-        <Card className="bg-gray-50 border-gray-200">
-          <CardHeader>
-            <CardTitle className="text-sm">Debug Info (Development Only)</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <strong>Category ID:</strong> {categoryId}
-              </div>
-              <div>
-                <strong>API URL:</strong> https://www.alfaeorders.com:19443/erpapi/getitems/obj
-              </div>
-              <div>
-                <strong>Payload:</strong> {`{Company: 20, BOption: 70, id: ${categoryId}}`}
-              </div>
-              <div>
-                <strong>Items Found:</strong> {items.length}
-              </div>
-              <div>
-                <strong>Data Type:</strong> {details ? typeof details : 'null'}
-              </div>
-              <div>
-                <strong>Has Items Array:</strong> {hasApiItems ? 'Yes' : 'No'}
-              </div>
-            </div>
-            
-            <details className="mt-4">
-              <summary className="cursor-pointer font-medium text-sm">Raw API Response</summary>
-              <pre className="text-xs text-gray-600 overflow-auto mt-2 p-2 bg-gray-100 rounded">
-                {JSON.stringify(details, null, 2)}
-              </pre>
-            </details>
-            
-            <details className="mt-2">
-              <summary className="cursor-pointer font-medium text-sm">Processed Items</summary>
-              <pre className="text-xs text-gray-600 overflow-auto mt-2 p-2 bg-gray-100 rounded">
-                {JSON.stringify(items, null, 2)}
-              </pre>
-            </details>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }

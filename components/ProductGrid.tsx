@@ -169,34 +169,6 @@ export function DynamicProductGrid() {
           )
         })}
       </div>
-
-      {/* Debug information - shows in development */}
-      {process.env.NODE_ENV === "development" && (
-        <Card className="bg-gray-50 border-gray-200 mx-4">
-          <CardHeader>
-            <CardTitle className="text-sm">Debug Info (Development Only)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-xs">
-              <p>
-                <strong>Categories Found:</strong> {categories.length}
-              </p>
-              <p>
-                <strong>API URL:</strong> https://www.alfaeorders.com:19443/erpapi/getitems/obj
-              </p>
-              <p>
-                <strong>Payload:</strong> {`{Company: 20, BOption: 70}`}
-              </p>
-            </div>
-            <details className="mt-4">
-              <summary className="cursor-pointer font-medium">Raw API Response</summary>
-              <pre className="text-xs text-gray-600 overflow-auto mt-2 p-2 bg-gray-100 rounded max-h-64">
-                {JSON.stringify(categories, null, 2)}
-              </pre>
-            </details>
-          </CardContent>
-        </Card>
-      )}
     </div>
   )
 }
