@@ -36,16 +36,7 @@ export function OrderTable({ productId, selectedProductDetails, onEnableProductD
 
   // Don't show the table if no product is selected
   if (!selectedProductDetails) {
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Πίνακας Παραγγελιών</h2>
-        </div>
-        <div className="text-center py-8 text-gray-500">
-          Επιλέξτε ένα προϊόν για να δείτε τις διαθέσιμες επιλογές παραγγελίας
-        </div>
-      </div>
-    )
+    return null
   }
 
   const handleAddToOrder = (product: Product) => {

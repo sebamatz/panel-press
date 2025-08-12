@@ -105,6 +105,7 @@ export default function CategoryDetailsPage() {
                 />
                 </div>              
               {/* Product Details Panel */}
+              {categoryId === "1" && (
               <div>
                 <ProductDetailsList 
                   productId={selectedProductId} 
@@ -113,7 +114,9 @@ export default function CategoryDetailsPage() {
                   enabled={isProductDetailsEnabled}
                 /> 
               </div>
+              )}
             </div>
+            
             <OrderTable 
               productId={selectedProductId} 
               selectedProductDetails={selectedProductDetails}
