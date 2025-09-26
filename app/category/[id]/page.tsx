@@ -17,6 +17,9 @@ import { ProductDetailsList } from "@/components/category/ProductDetailsList"
 import { CategoryProductList } from "@/components/category/CategoryProductList"
 import { OrderTable } from "@/components/category/OrderTable"
 
+import ColorCompany from "@/components/colors-selection/ColorCompany"
+import ColorSelections from "@/components/colors-selection/ColorSelections"
+import OrderOptions from "@/components/colors-selection/OrderOptions"
 export default function CategoryDetailsPage() {
   const params = useParams()
   const router = useRouter()
@@ -92,7 +95,10 @@ export default function CategoryDetailsPage() {
             categoryName={categoryName}
             onBack={handleBack}
           />
-
+<div className="w-full">
+     
+            <OrderOptions isDisabled={false} />
+            </div>
             {/* Display actual API data */}
             {apiItems.length > 0 ? (
               <div className="space-y-4">
