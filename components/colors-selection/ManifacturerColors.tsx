@@ -24,22 +24,22 @@ interface IColorData {
 }
 
 export default function ManifacturerColors() {
-  const { colorValue, setColorValue } = useColorSelection();
-  const [colorData, setColorData] = useState<IColorData[]>([]);
+const { colorData, colorManifacturerValue, setColorManifacturerValue } = useColorSelection();
+  
   const [open, setOpen] = useState(false);
 
   const handleInputChange = useCallback(
     (value: string) => {
-      setColorValue(value);
+      setColorManifacturerValue(value);
     },
-    [setColorValue]
+    [setColorManifacturerValue]
   );
 
   const handleChangeColor = useCallback(
     (value: string) => {
-      setColorValue(value);
+      setColorManifacturerValue(value);
     },
-    [setColorValue]
+    [setColorManifacturerValue]
   );
 
   return (
@@ -53,7 +53,7 @@ export default function ManifacturerColors() {
             aria-expanded={open}
             className="w-full max-w-sm justify-between"
           >
-            {colorValue || "Επιλέξτε χρώμα..."}
+            {colorManifacturerValue || "Επιλέξτε χρώμα..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -61,7 +61,7 @@ export default function ManifacturerColors() {
           <Command>
             <CommandInput
               placeholder="Αναζήτηση χρώματος..."
-              value={colorValue || ""}
+              value={colorManifacturerValue || ""}
               onValueChange={handleInputChange}
             />
             <CommandList>
@@ -79,7 +79,7 @@ export default function ManifacturerColors() {
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        colorValue === color.sku ? "opacity-100" : "opacity-0"
+                        colorManifacturerValue === color.sku ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {color.sku}

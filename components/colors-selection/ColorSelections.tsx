@@ -49,10 +49,10 @@ export default function ColorSelections() {
     selectedManifacturer,
     setSelectedManifacturer,
     selectedTrdpgroup,
+    setColorData,
   } = useColorSelection();
   const [colorValue, setColorValue] = useState<string>("");
 
-  const [colorData, setColorData] = useState<IColorData[]>([]);
   const [open, setOpen] = useState(false);
 
   const handleChangeColorType = useCallback(

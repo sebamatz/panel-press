@@ -5,8 +5,10 @@ import { useState } from "react";
 
 
 export default function ColorManufacturer() {
-  const { manifacturer, setManifacturer, selectedManifacturer, setSelectedManifacturer } = useColorSelection();
+  const { manifacturer, selectedManifacturer, setSelectedManifacturer, setColorData, setColorManifacturerValue } = useColorSelection();
   const handleChangeManifacturer = (value: string) => {
+    setColorData([]);
+    setColorManifacturerValue("");
     setSelectedManifacturer(value);
   };
 

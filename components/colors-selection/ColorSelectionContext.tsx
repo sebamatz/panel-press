@@ -2,6 +2,10 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { getItems } from "@/api/fetch";
 import { company } from "@/config";
 
+interface IColorData {
+  ccCPOUDRAID: number;
+  sku: string;
+}
 interface ColorSelection {
   colorSelection: ColorSelection | null;
   setColorSelection: (colorSelection: ColorSelection) => void;
@@ -23,6 +27,10 @@ interface ColorSelection {
   setColorValue: (colorValue: string) => void;
   selectedManifacturer: string;
   setSelectedManifacturer: (selectedManifacturer: string) => void;
+  colorData: IColorData[];
+  setColorData: (colorData: IColorData[]) => void;
+  colorManifacturerValue: string;
+  setColorManifacturerValue: (colorManifacturerValue: string) => void;
 }
 
 const initialColorSelection: ColorSelection = {
@@ -46,6 +54,10 @@ const initialColorSelection: ColorSelection = {
   setColorValue: () => {},
   selectedManifacturer: "",
   setSelectedManifacturer: () => {},
+  colorData: [],
+  setColorData: () => {},
+  colorManifacturerValue: "",
+  setColorManifacturerValue: () => {},
 };
 
 export const ColorSelectionContext = createContext<ColorSelection>(
@@ -79,6 +91,8 @@ export const ColorSelectionProvider = ({
   const [selectedColorCompany, setSelectedColorCompany] = useState<number | null>(null);
   const [colorValue, setColorValue] = useState<string>("");
   const [selectedManifacturer, setSelectedManifacturer] = useState<string>("");
+  const [colorData, setColorData] = useState<IColorData[]>([]);
+  const [colorManifacturerValue, setColorManifacturerValue] = useState<string>("");
   const value = {
     colorSelection,
     setColorSelection,
@@ -100,10 +114,13 @@ export const ColorSelectionProvider = ({
     setColorValue,
     selectedManifacturer,
     setSelectedManifacturer,
+    colorData,
+    setColorData,
+    colorManifacturerValue,
+    setColorManifacturerValue,
   };
 
   const handleGetCollorData = async (boption: number) => {
-    debugger;
     switch (boption) {
       case 30:
         const data30 = await getItems({ BOption: 30, Company: company });
