@@ -23,23 +23,59 @@ interface IColorData {
   sku: string;
 }
 
-export default function ManifacturerColors() {
-const { colorData, colorManifacturerValue, setColorManifacturerValue } = useColorSelection();
+interface ManifacturerColorsProps {
+  position?: 'first' | 'second';
+  colorData?: IColorData[];
+  onColorChange?: (value: string) => void;
+  onInputChange?: (value: string) => void;
+}
+
+export default function ManifacturerColors({ 
+  position, 
+  colorData: propColorData, 
+  onColorChange, 
+  onInputChange 
+}: ManifacturerColorsProps) {
+  const { 
+    colorData: contextColorData, 
+    colorManifacturerValue, 
+    setColorManifacturerValue,
+    dualColorSelections,
+    updateDualColorSelection
+  } = useColorSelection();
   
   const [open, setOpen] = useState(false);
 
+  // Use prop colorData if provided, otherwise use context
+  const currentColorData = propColorData || contextColorData;
+  
+  // Use dual color selection if position is provided
+  const currentColorValue = position 
+    ? dualColorSelections[position].colorManifacturerValue 
+    : colorManifacturerValue;
+
   const handleInputChange = useCallback(
     (value: string) => {
-      setColorManifacturerValue(value);
+      if (position) {
+        updateDualColorSelection(position, 'colorManifacturerValue', value);
+        onInputChange?.(value);
+      } else {
+        setColorManifacturerValue(value);
+      }
     },
-    [setColorManifacturerValue]
+    [position, updateDualColorSelection, setColorManifacturerValue, onInputChange]
   );
 
   const handleChangeColor = useCallback(
     (value: string) => {
-      setColorManifacturerValue(value);
+      if (position) {
+        updateDualColorSelection(position, 'colorManifacturerValue', value);
+        onColorChange?.(value);
+      } else {
+        setColorManifacturerValue(value);
+      }
     },
-    [setColorManifacturerValue]
+    [position, updateDualColorSelection, setColorManifacturerValue, onColorChange]
   );
 
   return (
@@ -53,7 +89,7 @@ const { colorData, colorManifacturerValue, setColorManifacturerValue } = useColo
             aria-expanded={open}
             className="w-full max-w-sm justify-between"
           >
-            {colorManifacturerValue || "Επιλέξτε χρώμα..."}
+            {currentColorValue || "Επιλέξτε χρώμα..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -61,13 +97,13 @@ const { colorData, colorManifacturerValue, setColorManifacturerValue } = useColo
           <Command>
             <CommandInput
               placeholder="Αναζήτηση χρώματος..."
-              value={colorManifacturerValue || ""}
+              value={currentColorValue || ""}
               onValueChange={handleInputChange}
             />
             <CommandList>
               <CommandEmpty>Δεν βρέθηκαν χρώματα.</CommandEmpty>
               <CommandGroup>
-                {colorData.map((color) => (
+                {currentColorData.map((color) => (
                   <CommandItem
                     key={color.ccCPOUDRAID}
                     value={color.sku}
@@ -79,7 +115,7 @@ const { colorData, colorManifacturerValue, setColorManifacturerValue } = useColo
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        colorManifacturerValue === color.sku ? "opacity-100" : "opacity-0"
+                        currentColorValue === color.sku ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {color.sku}

@@ -12,7 +12,7 @@ interface ColorSelection {
   colorCompanies: { trdr: number; name: string; trdpgroup: number }[];
   profilColors: string;
   setProfilColors: (profilColors: string) => void;
-  setColorCompanies: (colorCompanies: string) => void;
+  setColorCompanies: (colorCompanies: { trdr: number; name: string; trdpgroup: number }[]) => void;
   selectedTrdpgroup: number | null;
   setSelectedTrdpgroup: (selectedTrdpgroup: number | null) => void;
   colorTypes: { id: number; name: string }[];
@@ -31,6 +31,30 @@ interface ColorSelection {
   setColorData: (colorData: IColorData[]) => void;
   colorManifacturerValue: string;
   setColorManifacturerValue: (colorManifacturerValue: string) => void;
+  
+  // Dual color selection state
+  dualColorSelections: {
+    first: {
+      selectedColorCompany: number | null;
+      selectedTrdpgroup: number | null;
+      colorType: string;
+      selectedManifacturer: string;
+      colorValue: string;
+      colorData: IColorData[];
+      colorManifacturerValue: string;
+    };
+    second: {
+      selectedColorCompany: number | null;
+      selectedTrdpgroup: number | null;
+      colorType: string;
+      selectedManifacturer: string;
+      colorValue: string;
+      colorData: IColorData[];
+      colorManifacturerValue: string;
+    };
+  };
+  setDualColorSelections: (selections: any) => void;
+  updateDualColorSelection: (position: 'first' | 'second', field: string, value: any) => void;
 }
 
 const initialColorSelection: ColorSelection = {
@@ -58,6 +82,28 @@ const initialColorSelection: ColorSelection = {
   setColorData: () => {},
   colorManifacturerValue: "",
   setColorManifacturerValue: () => {},
+  dualColorSelections: {
+    first: {
+      selectedColorCompany: null,
+      selectedTrdpgroup: null,
+      colorType: "",
+      selectedManifacturer: "",
+      colorValue: "",
+      colorData: [],
+      colorManifacturerValue: "",
+    },
+    second: {
+      selectedColorCompany: null,
+      selectedTrdpgroup: null,
+      colorType: "",
+      selectedManifacturer: "",
+      colorValue: "",
+      colorData: [],
+      colorManifacturerValue: "",
+    },
+  },
+  setDualColorSelections: () => {},
+  updateDualColorSelection: () => {},
 };
 
 export const ColorSelectionContext = createContext<ColorSelection>(
@@ -77,7 +123,7 @@ export const ColorSelectionProvider = ({
     null
   );
   const [profilColors, setProfilColors] = useState<string>("");
-  const [colorCompanies, setColorCompanies] = useState<string | null>(null);
+  const [colorCompanies, setColorCompanies] = useState<{ trdr: number; name: string; trdpgroup: number }[]>([]);
   const [selectedTrdpgroup, setSelectedTrdpgroup] = useState<number | null>(
     null
   );
@@ -93,6 +139,39 @@ export const ColorSelectionProvider = ({
   const [selectedManifacturer, setSelectedManifacturer] = useState<string>("");
   const [colorData, setColorData] = useState<IColorData[]>([]);
   const [colorManifacturerValue, setColorManifacturerValue] = useState<string>("");
+  
+  // Dual color selection state
+  const [dualColorSelections, setDualColorSelections] = useState({
+    first: {
+      selectedColorCompany: null as number | null,
+      selectedTrdpgroup: null as number | null,
+      colorType: "",
+      selectedManifacturer: "",
+      colorValue: "",
+      colorData: [] as IColorData[],
+      colorManifacturerValue: "",
+    },
+    second: {
+      selectedColorCompany: null as number | null,
+      selectedTrdpgroup: null as number | null,
+      colorType: "",
+      selectedManifacturer: "",
+      colorValue: "",
+      colorData: [] as IColorData[],
+      colorManifacturerValue: "",
+    },
+  });
+
+  const updateDualColorSelection = (position: 'first' | 'second', field: string, value: any) => {
+    setDualColorSelections(prev => ({
+      ...prev,
+      [position]: {
+        ...prev[position],
+        [field]: value
+      }
+    }));
+  };
+
   const value = {
     colorSelection,
     setColorSelection,
@@ -118,6 +197,9 @@ export const ColorSelectionProvider = ({
     setColorData,
     colorManifacturerValue,
     setColorManifacturerValue,
+    dualColorSelections,
+    setDualColorSelections,
+    updateDualColorSelection,
   };
 
   const handleGetCollorData = async (boption: number) => {
