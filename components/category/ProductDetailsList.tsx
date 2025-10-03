@@ -14,10 +14,10 @@ interface ProductDetailsPanelProps {
 }
 
 export function ProductDetailsList({ productId, categoryId, onSelectionChange, enabled = true }: ProductDetailsPanelProps) {
-  const { data: details, isLoading: loading, error } = useGetProductDetailsQuery(
-    { productId: productId!, categoryId },
-    { skip: !productId || !enabled }
-  )
+  const { data: details, isLoading: loading, error } = useGetProductDetailsQuery({
+    productId: productId!,
+    categoryId
+  })
   const [selectedItem, setSelectedItem] = useState<any>(null)
 
   const handleSelectionChange = (item: any) => {

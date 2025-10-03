@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import ColorSelections from "./ColorSelections";
 import ColorCompany from "./ColorCompany";
+import ColorSelectionsDual from "./ColorSelectionsDual";
+import ColorCompanyDual from "./ColorCompanyDual";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { ColorSelectionProvider, useColorSelection } from "./ColorSelectionContext";
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import ColorCodeInput from "./ColorCodeInput";
 
 // Constants
@@ -21,13 +23,17 @@ type Props = {
 };
 
 const OrderOptionsContent = ({ isDisabled }: Props) => {
-  const { profilColors, setProfilColors } = useColorSelection();
+  const { 
+    profilColors, 
+    primarySelectedTrdpgroup, 
+    setProfilColors,
+    setPrimarySelectedTrdpgroup 
+  } = useColorSelectionStore();
  
   const [colorValue, setColorValue] = useState<string>("");
-  const [selectedTrdpgroup, setSelectedTrdpgroup] = useState<number | null>(null);
 
   const handleProfilColors = (value: string) => {
-    setSelectedTrdpgroup(null);
+    setPrimarySelectedTrdpgroup(null);
     setColorValue("");
     setProfilColors(value);
   };
@@ -93,32 +99,34 @@ const ColorOptions = () => <div className="space-y-4">
       {profilColors === profilColorsType.DUAL_COLOR && (
         <div className="flex flex-col gap-4">
           <div className="flex w-full justify-between items-baseline gap-4">
-          <ColorCompany />
-          <ColorSelections />
-        </div>
-        <div className="flex w-full items-baseline gap-4"> 
-          <ColorCompany />
-          <ColorSelections />
-        </div>
+            <ColorCompanyDual isSecondary={false} />
+          </div>
+          <div className="flex w-full items-baseline gap-4">
+            <ColorSelectionsDual isSecondary={false} />
+          </div>
+          <div className="flex w-full justify-between items-baseline gap-4">
+            <ColorCompanyDual isSecondary={true} />
+          </div>
+          <div className="flex w-full items-baseline gap-4"> 
+            <ColorSelectionsDual isSecondary={true} />
+          </div>
         </div>
       )}
 
       {profilColors === profilColorsType.COLOR && (
-        <div className="flex items-baseline gap-4">
-          <ColorCompany />
-          <ColorSelections />
-        </div>
-      )}
-      
-      {profilColors === profilColorsType.COLOR && (
         <div className="space-y-4">
-          {selectedTrdpgroup === 1 ? (
-            <ColorSelections />
-          ) : (
-            selectedTrdpgroup && (
-              <ColorCodeInput />
-            )
-          )}
+          <div className="flex items-baseline gap-4">
+            <ColorCompany />
+          </div>
+          <div className="flex items-baseline gap-4">
+            {primarySelectedTrdpgroup === 1 ? (
+              <ColorSelections />
+            ) : (
+              primarySelectedTrdpgroup && (
+                <ColorCodeInput />
+              )
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -126,11 +134,7 @@ const ColorOptions = () => <div className="space-y-4">
 };
 
 const OrderOptions = ({ isDisabled }: Props) => {
-  return (
-    <ColorSelectionProvider>
-      <OrderOptionsContent isDisabled={isDisabled} />
-    </ColorSelectionProvider>
-  );
+  return <OrderOptionsContent isDisabled={isDisabled} />;
 };
 
 export default OrderOptions;

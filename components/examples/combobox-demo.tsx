@@ -1,35 +1,88 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Combobox, ProductCombobox, ComboboxItem } from "@/components/ui/combobox"
-import { Package, User, Building, Car } from "lucide-react"
+import * as React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Combobox,
+  ProductCombobox,
+  ComboboxItem,
+} from "@/components/ui/combobox";
+import { Package, User, Building, Car } from "lucide-react";
 
 // Sample data for different use cases
 const products: ComboboxItem[] = [
-  { id: 1, name: "Laptop", description: "High-performance laptop", price: 1200 },
-  { id: 2, name: "Smartphone", description: "Latest smartphone model", price: 800 },
+  {
+    id: 1,
+    name: "Laptop",
+    description: "High-performance laptop",
+    price: 1200,
+  },
+  {
+    id: 2,
+    name: "Smartphone",
+    description: "Latest smartphone model",
+    price: 800,
+  },
   { id: 3, name: "Tablet", description: "10-inch tablet", price: 500 },
-  { id: 4, name: "Headphones", description: "Wireless noise-canceling", price: 200 },
-]
+  {
+    id: 4,
+    name: "Headphones",
+    description: "Wireless noise-canceling",
+    price: 200,
+  },
+];
 
 const users: ComboboxItem[] = [
-  { id: 1, name: "John Doe", description: "Software Engineer", email: "john@example.com" },
-  { id: 2, name: "Jane Smith", description: "Product Manager", email: "jane@example.com" },
-  { id: 3, name: "Bob Johnson", description: "Designer", email: "bob@example.com" },
-]
+  {
+    id: 1,
+    name: "John Doe",
+    description: "Software Engineer",
+    email: "john@example.com",
+  },
+  {
+    id: 2,
+    name: "Jane Smith",
+    description: "Product Manager",
+    email: "jane@example.com",
+  },
+  {
+    id: 3,
+    name: "Bob Johnson",
+    description: "Designer",
+    email: "bob@example.com",
+  },
+];
 
 const companies: ComboboxItem[] = [
-  { id: 1, name: "Tech Corp", description: "Technology company", industry: "Technology" },
-  { id: 2, name: "Design Studio", description: "Creative agency", industry: "Creative" },
-  { id: 3, name: "Consulting Group", description: "Business consulting", industry: "Consulting" },
-]
+  {
+    id: 1,
+    name: "Tech Corp",
+    description: "Technology company",
+    industry: "Technology",
+  },
+  {
+    id: 2,
+    name: "Design Studio",
+    description: "Creative agency",
+    industry: "Creative",
+  },
+  {
+    id: 3,
+    name: "Consulting Group",
+    description: "Business consulting",
+    industry: "Consulting",
+  },
+];
 
 export function ComboboxDemo() {
-  const [selectedProduct, setSelectedProduct] = React.useState<ComboboxItem | null>(null)
-  const [selectedUser, setSelectedUser] = React.useState<ComboboxItem | null>(null)
-  const [selectedCompany, setSelectedCompany] = React.useState<ComboboxItem | null>(null)
+  const [selectedProduct, setSelectedProduct] =
+    React.useState<ComboboxItem | null>(null);
+  const [selectedUser, setSelectedUser] = React.useState<ComboboxItem | null>(
+    null
+  );
+  const [selectedCompany, setSelectedCompany] =
+    React.useState<ComboboxItem | null>(null);
 
   // Custom render function for users
   const renderUserItem = (user: ComboboxItem) => (
@@ -43,7 +96,7 @@ export function ComboboxDemo() {
         <div className="text-xs text-gray-400">{user.email}</div>
       </div>
     </div>
-  )
+  );
 
   // Custom render function for companies
   const renderCompanyItem = (company: ComboboxItem) => (
@@ -54,16 +107,22 @@ export function ComboboxDemo() {
       <div className="flex-1">
         <div className="font-medium">{company.name}</div>
         <div className="text-sm text-gray-500">{company.description}</div>
-        <div className="text-xs text-gray-400">Industry: {company.industry}</div>
+        <div className="text-xs text-gray-400">
+          Industry: {company.industry}
+        </div>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto p-6">
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Combobox Examples</h1>
-        <p className="text-gray-600">Different ways to use the reusable combobox component</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          Combobox Examples
+        </h1>
+        <p className="text-gray-600">
+          Different ways to use the reusable combobox component
+        </p>
       </div>
 
       {/* Product Combobox (Specialized) */}
@@ -83,7 +142,8 @@ export function ComboboxDemo() {
           {selectedProduct && (
             <div className="p-3 bg-green-50 rounded-md">
               <p className="text-sm">
-                <strong>Selected:</strong> {selectedProduct.name} - ${selectedProduct.price}
+                <strong>Selected:</strong> {selectedProduct.name} - $
+                {selectedProduct.price}
               </p>
             </div>
           )}
@@ -112,7 +172,8 @@ export function ComboboxDemo() {
           {selectedUser && (
             <div className="p-3 bg-blue-50 rounded-md">
               <p className="text-sm">
-                <strong>Selected:</strong> {selectedUser.name} ({selectedUser.email})
+                <strong>Selected:</strong> {selectedUser.name} (
+                {selectedUser.email})
               </p>
             </div>
           )}
@@ -143,7 +204,8 @@ export function ComboboxDemo() {
           {selectedCompany && (
             <div className="p-3 bg-purple-50 rounded-md">
               <p className="text-sm">
-                <strong>Selected:</strong> {selectedCompany.name} ({selectedCompany.industry})
+                <strong>Selected:</strong> {selectedCompany.name} (
+                {selectedCompany.industry})
               </p>
             </div>
           )}
@@ -160,7 +222,7 @@ export function ComboboxDemo() {
             <div>
               <h4 className="font-semibold mb-2">Basic Usage:</h4>
               <pre className="bg-white p-2 rounded text-xs overflow-x-auto">
-{`<Combobox
+                {`<Combobox
   items={items}
   value={selectedItem}
   onValueChange={setSelectedItem}
@@ -170,7 +232,7 @@ export function ComboboxDemo() {
             <div>
               <h4 className="font-semibold mb-2">Product Combobox:</h4>
               <pre className="bg-white p-2 rounded text-xs overflow-x-auto">
-{`<ProductCombobox
+                {`<ProductCombobox
   products={products}
   value={selectedProduct}
   onValueChange={setSelectedProduct}
@@ -180,7 +242,7 @@ export function ComboboxDemo() {
             <div>
               <h4 className="font-semibold mb-2">Custom Render:</h4>
               <pre className="bg-white p-2 rounded text-xs overflow-x-auto">
-{`<Combobox
+                {`<Combobox
   items={items}
   renderItem={customRenderFunction}
   icon={<CustomIcon />}
@@ -191,7 +253,7 @@ export function ComboboxDemo() {
             <div>
               <h4 className="font-semibold mb-2">With Loading State:</h4>
               <pre className="bg-white p-2 rounded text-xs overflow-x-auto">
-{`<Combobox
+                {`<Combobox
   items={items}
   loading={isLoading}
   disabled={isDisabled}
@@ -202,5 +264,5 @@ export function ComboboxDemo() {
         </CardContent>
       </Card>
     </div>
-  )
-} 
+  );
+}

@@ -8,7 +8,6 @@ import {
   CategoryLoadingState,
   CategoryErrorState,
   CategoryDetailsHeader,
-  CategoryProductSelector,
   CategoryEmptyState,
   CategoryDebugInfo,
   extractCategoryName
@@ -95,10 +94,6 @@ export default function CategoryDetailsPage() {
             categoryName={categoryName}
             onBack={handleBack}
           />
-<div className="w-full">
-     
-            <OrderOptions isDisabled={false} />
-            </div>
             {/* Display actual API data */}
             {apiItems.length > 0 ? (
               <div className="space-y-4">
@@ -107,32 +102,33 @@ export default function CategoryDetailsPage() {
               <div>
                 <CategoryProductList 
                      products={apiItems} 
-                  onProductSelect={handleProductSelect}
+                     categoryId={categoryId}
+                     onProductSelect={handleProductSelect}
                 />
                 </div>              
-              {/* Product Details Panel */}
-              {categoryId === "1" && (
-              <div>
-                <ProductDetailsList 
-                  productId={selectedProductId} 
-                  categoryId={categoryId} 
-                  onSelectionChange={handleProductDetailsSelection}
-                  enabled={isProductDetailsEnabled}
-                /> 
-              </div>
-              )}
             </div>
-            
-            <OrderTable 
-              productId={selectedProductId} 
-              selectedProductDetails={selectedProductDetails}
-              onEnableProductDetails={handleEnableProductDetails}
-              onDisableProductDetails={handleDisableProductDetails}
-            />
-
             </div>
           ) : (
             <CategoryEmptyState />
+            )}
+            
+            {/* Show OrderOptions and OrderTable when there are API items (category loaded) and valid categoryId */}
+            {apiItems.length > 0 && categoryId && (
+              <>
+                <div className="w-full">
+                  <OrderOptions isDisabled={false} />
+                </div>
+                
+                <OrderTable 
+                  productId={selectedProductId} 
+                  selectedProductDetails={selectedProductDetails}
+                  onEnableProductDetails={handleEnableProductDetails}
+                  onDisableProductDetails={handleDisableProductDetails}
+                  categoryId={categoryId}
+                  products={apiItems}
+                  onProductSelect={handleProductSelect}
+                />
+              </>
             )}
 
             {/* Debug information - shows in development */}

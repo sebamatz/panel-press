@@ -1,15 +1,15 @@
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useColorSelection } from "./ColorSelectionContext";
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import { useState } from "react";
 
 
 export default function ColorManufacturer() {
-  const { manifacturer, selectedManifacturer, setSelectedManifacturer, setColorData, setColorManifacturerValue } = useColorSelection();
+  const { primaryManifacturer, primarySelectedManifacturer, setPrimarySelectedManifacturer, setPrimaryColorData, setPrimaryColorManifacturerValue } = useColorSelectionStore();
   const handleChangeManifacturer = (value: string) => {
-    setColorData([]);
-    setColorManifacturerValue("");
-    setSelectedManifacturer(value);
+    setPrimaryColorData([]);
+    setPrimaryColorManifacturerValue("");
+    setPrimarySelectedManifacturer(value);
   };
 
   return (
@@ -17,12 +17,12 @@ export default function ColorManufacturer() {
     <Label htmlFor="manufacturer-select" className="text-sm font-medium">
       Επιλογή Κατασκευαστή
     </Label>
-    <Select value={selectedManifacturer} onValueChange={handleChangeManifacturer}>
+    <Select value={primarySelectedManifacturer} onValueChange={handleChangeManifacturer}>
       <SelectTrigger id="manufacturer-select" className="">
         <SelectValue placeholder="Επιλέξτε κατασκευαστή" />
       </SelectTrigger>
       <SelectContent>
-        {manifacturer.map((manufacturer: { trdr: number; name: string }) => (
+        {primaryManifacturer.map((manufacturer: { trdr: number; name: string }) => (
           <SelectItem key={manufacturer.trdr} value={manufacturer.trdr.toString()}>
             {manufacturer.name}
           </SelectItem>

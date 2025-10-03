@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -26,88 +25,96 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useColorSelection } from "./ColorSelectionContext";
-import { getItems } from "@/api/fetch";
-import { company } from "@/config";
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import ColorCodeInput from "./ColorCodeInput";
 import ColorManufacturer from "./ColorManufacturer";
 import ManifacturerColors from "./ManifacturerColors";
 
-interface IColorData {
-  ccCPOUDRAID: number;
-  sku: string;
-}
-
 export default function ColorSelections() {
   const {
     colorTypes,
-    setColorTypes,
-    manifacturer,
-    setManifacturer,
-    colorType,
-    setColorType,
-    selectedManifacturer,
-    setSelectedManifacturer,
-    selectedTrdpgroup,
-    setColorData,
-  } = useColorSelection();
-  const [colorValue, setColorValue] = useState<string>("");
+    primaryManifacturer,
+    primaryColorType,
+    primarySelectedManifacturer,
+    primarySelectedTrdpgroup,
+    primaryColorValue,
+    setPrimaryColorType,
+    setPrimarySelectedManifacturer,
+    setPrimaryColorValue,
+    setPrimaryManifacturer,
+    setPrimaryColorData,
+    fetchColors,
+    resetPrimaryManufacturer,
+    fetchManufacturers,
+  } = useColorSelectionStore();
 
   const [open, setOpen] = useState(false);
 
   const handleChangeColorType = useCallback(
     (value: string) => {
       //reset all values
-      setColorValue("");
-      //setSelectedManifacturer("");/
-      setManifacturer([]);
-      setColorType(value);
+      setPrimaryColorValue("");
+      setPrimaryColorType(value);
+      resetPrimaryManufacturer();
     },
-    [setColorValue]
+    [setPrimaryColorValue, setPrimaryColorType, resetPrimaryManufacturer]
   );
 
   const handleChangeManifacturer = useCallback(
     (value: string) => {
-      setColorValue("");
-      // setSelectedManifacturer(value);
+      setPrimaryColorValue("");
+      setPrimarySelectedManifacturer(value);
     },
-    [setColorValue]
+    [setPrimaryColorValue, setPrimarySelectedManifacturer]
   );
 
   const handleInputChange = useCallback(
     (value: string) => {
-      setColorValue(value);
+      setPrimaryColorValue(value);
     },
-    [setColorValue]
+    [setPrimaryColorValue]
   );
 
   const handleChangeColor = useCallback(
     (value: string) => {
-      setColorValue(value);
+      setPrimaryColorValue(value);
     },
-    [setColorValue]
+    [setPrimaryColorValue]
   );
 
   const handleGetColor = useCallback(async () => {
-    const data: IColorData[] = await getItems({
-      BOption: 50,
-      Company: company,
-      //if colorType is 3, then id is 20, else id is selectedManifacturer
-      id: Number(colorType) === 3 ? 20 : Number(selectedManifacturer),
-      LastId: Number(colorType),
-      SearchValue: colorValue,
-    });
-    //[{"ccCPOUDRAID":15606,"sku":"SE802G-MATT-1002"}]
-    setColorData(data);
-  }, [colorType, colorValue, selectedManifacturer]);
+    await fetchColors({
+      colorType: primaryColorType,
+      selectedManifacturer: primarySelectedManifacturer,
+      colorValue: primaryColorValue,
+    }, false);
+  }, [primaryColorType, primaryColorValue, primarySelectedManifacturer, fetchColors]);
 
   useEffect(() => {
-    if (selectedManifacturer && colorType !== "3") {
+    if (primarySelectedManifacturer && primaryColorType !== "3") {
       handleGetColor();
     }
-  }, [selectedManifacturer, handleGetColor, colorType]);
+  }, [primarySelectedManifacturer, handleGetColor, primaryColorType]);
 
-  return selectedTrdpgroup === 1 ? (
+  // Initialize color types on component mount
+  useEffect(() => {
+    const { fetchColorData } = useColorSelectionStore.getState();
+    fetchColorData(30);
+  }, []);
+
+  // Fetch manufacturers when color type changes
+  useEffect(() => {
+    if (primaryColorType) {
+      const { fetchColorData } = useColorSelectionStore.getState();
+      if (primaryColorType === '3') {
+        fetchColorData(50);
+      } else {
+        fetchColorData(40);
+      }
+    }
+  }, [primaryColorType]);
+
+  return primarySelectedTrdpgroup === 1 ? (
     <div className="space-y-4 w-full">
       <div className="flex items-baseline gap-4">
         {/* Color Type Selection */}
@@ -115,7 +122,7 @@ export default function ColorSelections() {
           <Label htmlFor="color-type-select" className="text-sm font-medium">
             Τύπος Χρώματος
           </Label>
-          <Select value={colorType} onValueChange={handleChangeColorType}>
+          <Select value={primaryColorType} onValueChange={handleChangeColorType}>
             <SelectTrigger id="color-type-select" className="w-full max-w-sm">
               <SelectValue placeholder="Επιλέξτε τύπο χρώματος" />
             </SelectTrigger>
@@ -129,9 +136,9 @@ export default function ColorSelections() {
           </Select>
         </div>
         {/* Conditional rendering based on colorType */}
-        {colorType === "3" ? <ColorCodeInput /> : <ColorManufacturer />}
+        {primaryColorType === "3" ? <ColorCodeInput /> : <ColorManufacturer />}
         {/* Color Selection Combobox */}
-        {selectedManifacturer && colorType !== "3" && <ManifacturerColors />}
+        {primarySelectedManifacturer && primaryColorType !== "3" && <ManifacturerColors />}
       </div>
     </div>
   ) : (

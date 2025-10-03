@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Roboto } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/components/ThemeProvider'
-import { ReduxProvider } from '@/store/provider'
 import { Toaster } from '@/components/ui/sonner'
 import { Footer } from '@/components/Footer'
 import { AppSidebar } from '@/components/AppSidebar'
@@ -45,20 +44,18 @@ html {
           enableSystem
           disableTransitionOnChange
         >
-          <ReduxProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <SidebarInset>
-                <div className="min-h-screen flex flex-col">
-                  <main className="flex-1">
-                    {children}
-                  </main>
-                  <Footer />
-                </div>
-              </SidebarInset>
-            </SidebarProvider>
-            <Toaster />
-          </ReduxProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <div className="min-h-screen flex flex-col">
+                <main className="flex-1">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </SidebarInset>
+          </SidebarProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
