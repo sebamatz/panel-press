@@ -14,8 +14,8 @@ import {
 } from "@/components/category"
 import { ProductDetailsList } from "@/components/category/ProductDetailsList"
 import { CategoryProductList } from "@/components/category/CategoryProductList"
-import { OrderTable } from "@/components/category/OrderTable"
-
+import  OrderTable  from "@/components/category/OrderTable"
+import { useApiStore } from "@/lib/stores/apiStore"
 import ColorCompany from "@/components/colors-selection/ColorCompany"
 import ColorSelections from "@/components/colors-selection/ColorSelections"
 import OrderOptions from "@/components/colors-selection/OrderOptions"
@@ -25,16 +25,14 @@ export default function CategoryDetailsPage() {
   const categoryId = params.id as string
 
   const { data: details, isLoading: loading, error } = useGetCategoryDetailsQuery(categoryId)
-  const [selectedProductId, setSelectedProductId] = useState<string | number | null>(null)
-  const [selectedProductDetails, setSelectedProductDetails] = useState<any>(null)
+  const { setSelectedCategoryDetails } = useApiStore() 
   const [isProductDetailsEnabled, setIsProductDetailsEnabled] = useState<boolean>(false)
-
   const handleBack = () => {
     router.push("/")
   }
 
   const handleProductSelect = (productId: string | number | null) => {
-    setSelectedProductId(productId)
+    setSelectedCategoryDetails(productId)
     // Enable ProductDetailsList when a product is selected from CategoryProductList
     if (productId) {
       setIsProductDetailsEnabled(true)
@@ -42,7 +40,7 @@ export default function CategoryDetailsPage() {
   }
 
   const handleProductDetailsSelection = (selectedItem: any) => {
-    setSelectedProductDetails(selectedItem)
+    setSelectedCategoryDetails(selectedItem)
   }
 
   const handleEnableProductDetails = () => {
@@ -51,7 +49,7 @@ export default function CategoryDetailsPage() {
 
   const handleDisableProductDetails = () => {
     setIsProductDetailsEnabled(false)
-    setSelectedProductDetails(null)
+    setSelectedCategoryDetails(null)
   }
 
   // Use the processed items directly from the Redux store
@@ -119,15 +117,7 @@ export default function CategoryDetailsPage() {
                   <OrderOptions isDisabled={false} />
                 </div>
                 
-                <OrderTable 
-                  productId={selectedProductId} 
-                  selectedProductDetails={selectedProductDetails}
-                  onEnableProductDetails={handleEnableProductDetails}
-                  onDisableProductDetails={handleDisableProductDetails}
-                  categoryId={categoryId}
-                  products={apiItems}
-                  onProductSelect={handleProductSelect}
-                />
+                <OrderTable />
               </>
             )}
 

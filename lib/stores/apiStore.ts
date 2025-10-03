@@ -36,23 +36,15 @@ export interface ProductDetails {
 }
 
 export interface ColumnSchema {
-  id: string | number
-  name: string
-  type: string
-  colType?: string
-  header: string
-  accessorKey: string
-  required?: boolean
-  editable?: boolean
-  priority?: number
-  baseCategory?: number
-  series?: number
-  options?: any[]
-  rawValues?: string
-  values?: string // JSON string containing column values/options
-  columnId?: number
-  field?: string
-  title?: string
+  baseCategory:number
+  colType:string
+  columnId:number
+  editable:boolean
+  field:string
+  priority:number
+  series:number
+  title:string
+  values:any
   [key: string]: any
 }
 
@@ -66,14 +58,16 @@ interface ApiState {
   categoryDetails: Record<string | number, CategoryDetails>
   categoryDetailsLoading: Record<string | number, boolean>
   categoryDetailsError: Record<string | number, string | null>
-  
+  selectedCategoryDetails: string | number | null
+  setSelectedCategoryDetails: (selectedCategoryDetails:string | number | null) => void
   // Product details state
   productDetails: Record<string, ProductDetails>
   productDetailsLoading: Record<string, boolean>
   productDetailsError: Record<string, string | null>
   
   // Column schema state
-  columnSchemas: Record<string, ColumnSchema[]>
+  columnSchemas: ColumnSchema[]
+    
   columnSchemasLoading: Record<string, boolean>
   columnSchemasError: Record<string, string | null>
   
@@ -227,18 +221,18 @@ function processColumnSchemaResponse(data: any): ColumnSchema[] {
       }
 
       return {
-        id: item.columnId || item.id || item.ID || item.Id,
-        name: item.field || item.name || item.Name || item.fieldName || item.FieldName,
-        type: item.colType || item.type || item.Type || item.dataType || item.DataType || 'string',
-        header: item.title || item.header || item.Header || item.displayName || item.DisplayName || item.field,
-        accessorKey: item.field || item.accessorKey || item.AccessorKey || item.fieldName || item.FieldName,
-        required: !item.editable || item.required || item.Required || false,
-        editable: item.editable !== false,
-        priority: item.priority || 0,
-        baseCategory: item.baseCategory,
-        series: item.series,
-        options: parsedValues,
-        rawValues: item.values,
+        // id: item.columnId || item.id || item.ID || item.Id,
+        // name: item.field || item.name || item.Name || item.fieldName || item.FieldName,
+        // type: item.colType || item.type || item.Type || item.dataType || item.DataType || 'string',
+        // header: item.title || item.header || item.Header || item.displayName || item.DisplayName || item.field,
+        // accessorKey: item.field || item.accessorKey || item.AccessorKey || item.fieldName || item.FieldName,
+        // required: !item.editable || item.required || item.Required || false,
+        // editable: item.editable !== false,
+        // priority: item.priority || 0,
+        // baseCategory: item.baseCategory,
+        // series: item.series,
+        // options: parsedValues,
+        // rawValues: item.values,
         ...item,
       }
     })
@@ -342,12 +336,17 @@ export const useApiStore = create<ApiState>()(
       categoryDetails: {},
       categoryDetailsLoading: {},
       categoryDetailsError: {},
+      selectedCategoryDetails: null,
+      setSelectedCategoryDetails: (selectedCategoryDetails:string | number | null) => state => ({
+        ...state,
+        selectedCategoryDetails,
+      }),
       
       productDetails: {},
       productDetailsLoading: {},
       productDetailsError: {},
-      
-      columnSchemas: {},
+        
+      columnSchemas: null,
       columnSchemasLoading: {},
       columnSchemasError: {},
       
@@ -507,10 +506,10 @@ export const useApiStore = create<ApiState>()(
           }
           
           const data = await response.json()
-          const columns = processColumnSchemaResponse(data)
+       
           
           set(state => ({
-            columnSchemas: { ...state.columnSchemas, [key]: columns },
+            columnSchemas:data,
             columnSchemasLoading: { ...state.columnSchemasLoading, [key]: false },
             columnSchemasError: { ...state.columnSchemasError, [key]: null }
           }))

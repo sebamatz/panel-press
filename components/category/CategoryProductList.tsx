@@ -1,6 +1,7 @@
 import { useState } from "react"
-import { ProductCombobox, ComboboxItem } from "@/components/ui/combobox"
+import { ComboboxItem, Combobox } from "@/components/ui/combobox"
 import { useApiStore } from "@/lib/stores/apiStore"
+import { Package } from "lucide-react"
 
 interface CategoryProductSelectorProps {
   products: ComboboxItem[]
@@ -17,6 +18,7 @@ export function CategoryProductList({
   const { fetchColumnSchema } = useApiStore()
 
   const handleProductSelect = (item: ComboboxItem | null) => {
+    debugger;
     setSelectedItem(item)
     onProductSelect?.(item?.id || null)
     
@@ -28,11 +30,20 @@ export function CategoryProductList({
 
   return (
     <div className="space-y-4">
-      <ProductCombobox 
-        title="Επιλέξτε Κατηγορία"  
-        value={selectedItem} 
-        onValueChange={handleProductSelect} 
-        products={products} 
+       <Combobox
+        items={products}
+        icon={<Package className="h-5 w-5" />}
+        placeholder="Επιλέξτε ένα προϊόν..."
+        searchPlaceholder="Αναζήτηση προϊόντων..."
+        emptyMessage="Δεν βρέθηκαν προϊόντα."
+        showBadge={true}
+        badgeText="Νέο"
+        title="Επιλέξτε Σειρά"
+        showTitle={true}
+        badgeCount={products.length}
+        badgeLabel="προϊόντα διαθέσιμα"
+        value={selectedItem}
+        onValueChange={handleProductSelect}
       />
     </div>
   )

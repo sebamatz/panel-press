@@ -193,27 +193,8 @@ export function Combobox({
 }
 
 // Specialized combobox for products
-export interface ProductComboboxProps extends Omit<ComboboxProps, 'items' | 'icon'> {
+export interface SeriesComboboxProps extends Omit<ComboboxProps, 'items' | 'icon'> {
   products: ComboboxItem[]
-}
-
-export function ProductCombobox({ products, ...props }: ProductComboboxProps) {
-  return (
-    <Combobox
-      items={products}
-      icon={<Package className="h-5 w-5" />}
-      placeholder="Επιλέξτε ένα προϊόν..."
-      searchPlaceholder="Αναζήτηση προϊόντων..."
-      emptyMessage="Δεν βρέθηκαν προϊόντα."
-      showBadge={true}
-      badgeText="Νέο"
-      title="Επιλέξτε Προϊόν"
-      showTitle={true}
-      badgeCount={products.length}
-      badgeLabel="προϊόντα διαθέσιμα"
-      {...props}
-    />
-  )
 }
 
  

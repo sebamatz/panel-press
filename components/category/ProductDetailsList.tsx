@@ -1,10 +1,11 @@
-import { useGetProductDetailsQuery } from "@/lib/api"
+import { useApiStore, useGetProductDetailsQuery } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, Package, AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useState } from "react"
 import { Combobox } from "../ui/combobox"
+import { useParams } from "next/navigation"
 
 interface ProductDetailsPanelProps {
   productId: string | number | null
@@ -13,9 +14,12 @@ interface ProductDetailsPanelProps {
   enabled?: boolean
 }
 
-export function ProductDetailsList({ productId, categoryId, onSelectionChange, enabled = true }: ProductDetailsPanelProps) {
+export function ProductDetailsList( {onSelectionChange, enabled = true }: ProductDetailsPanelProps) {
+  const params = useParams()
+  const { selectedCategoryDetails } = useApiStore()
+  const categoryId = params.id as string
+
   const { data: details, isLoading: loading, error } = useGetProductDetailsQuery({
-    productId: productId!,
     categoryId
   })
   const [selectedItem, setSelectedItem] = useState<any>(null)
