@@ -153,8 +153,8 @@ export function Combobox({
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-      <PopoverContent className={cn("w-[var(--radix-popover-trigger-width)] p-0", popoverClassName)} align="start">
-        <Command>
+      <PopoverContent className={cn("w-auto p-0 max-w-[80vw]", popoverClassName)} align="start">
+        <Command className="min-w-[400px]">
           <CommandInput placeholder={searchPlaceholder} className="h-9" onValueChange={handleSearch} />
           <CommandList className="max-h-[400px]">
             <CommandEmpty className="p-4">{emptyMessage}</CommandEmpty>
