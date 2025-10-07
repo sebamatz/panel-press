@@ -190,3 +190,86 @@ export const getItems = async (payload: IGetItems) => {
   const data = await response.json();
   return data;
 };
+
+
+export const fetchBaseCategories = async () => {
+  const payload = {
+    Company: 20,
+    BOption: 70,
+  };
+  const url = `${ domain }/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  })
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`)
+  }
+  
+  const data = await response.json()
+  return data;
+};
+
+export const fetchCategoryDetails = async (categoryId: string | number) => {
+  const payload = {
+    Company: 20,
+    BOption: 70,
+    id: categoryId,
+  };
+  try {
+    const url = `${ domain }/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`
+    const response = await fetch(url, {
+      method: 'GET',
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = await response.json()
+    return data;
+  } catch (error) {
+    console.error('Error fetching category details:', error);
+    throw error;
+  }
+};
+
+export const fetchColumnSchema = async (baseCategory: string | number, series: string | number) => {
+  try {
+    const url = `${domain}/erpapi/panel/schema/columns?BaseCategory=${baseCategory}&Series=${series}`
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    })
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching column schema:', error);
+    throw error;
+  }
+};
+
+
+export const fetchProductDetailsList = async (baseCategory: string | number, lastId: string | number, searchValue: string) => {
+  try {
+  const payload = {
+    Company: 20, BOption: 70, id: baseCategory, LastId: lastId, SearchValue: searchValue
+  };
+  const url = `${domain}/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`;
+  const response = await fetch(url, {
+    method: 'GET',
+    });
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching product details list:', error);
+    throw error;
+  }
+};

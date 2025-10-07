@@ -94,7 +94,7 @@ const ColorOptions = () => <div className="space-y-4">
 </div>
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-6 ">
       <ColorOptions />
       {profilColors === profilColorsType.DUAL_COLOR && (
         <div className="flex flex-col gap-4">
@@ -114,7 +114,7 @@ const ColorOptions = () => <div className="space-y-4">
       )}
 
       {profilColors === profilColorsType.COLOR && (
-        <div className="space-y-4">
+        <div className="space-y-4 flex items-baseline gap-4">
           <div className="flex items-baseline gap-4">
             <ColorCompany />
           </div>

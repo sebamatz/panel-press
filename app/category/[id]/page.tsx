@@ -10,14 +10,12 @@ import {
   CategoryDetailsHeader,
   CategoryEmptyState,
   CategoryDebugInfo,
-  extractCategoryName
+  extractCategoryName,
+  ProductDetailsList
 } from "@/components/category"
-import { ProductDetailsList } from "@/components/category/ProductDetailsList"
 import { CategoryProductList } from "@/components/category/CategoryProductList"
 import  OrderTable  from "@/components/category/OrderTable"
-import { useApiStore } from "@/lib/stores/apiStore"
-import ColorCompany from "@/components/colors-selection/ColorCompany"
-import ColorSelections from "@/components/colors-selection/ColorSelections"
+import { useApiStore } from "@/lib/stores/appStore"
 import OrderOptions from "@/components/colors-selection/OrderOptions"
 export default function CategoryDetailsPage() {
   const params = useParams()
@@ -26,31 +24,12 @@ export default function CategoryDetailsPage() {
 
   const { data: details, isLoading: loading, error } = useGetCategoryDetailsQuery(categoryId)
   const { setSelectedCategoryDetails } = useApiStore() 
-  const [isProductDetailsEnabled, setIsProductDetailsEnabled] = useState<boolean>(false)
   const handleBack = () => {
     router.push("/")
   }
 
-  const handleProductSelect = (productId: string | number | null) => {
-    setSelectedCategoryDetails(productId)
-    // Enable ProductDetailsList when a product is selected from CategoryProductList
-    if (productId) {
-      setIsProductDetailsEnabled(true)
-    }
-  }
 
-  const handleProductDetailsSelection = (selectedItem: any) => {
-    setSelectedCategoryDetails(selectedItem)
-  }
 
-  const handleEnableProductDetails = () => {
-    setIsProductDetailsEnabled(true)
-  }
-
-  const handleDisableProductDetails = () => {
-    setIsProductDetailsEnabled(false)
-    setSelectedCategoryDetails(null)
-  }
 
   // Use the processed items directly from the Redux store
   const apiItems = details?.items || []
@@ -82,6 +61,9 @@ export default function CategoryDetailsPage() {
     )
   }
 
+  // log current store state
+  console.log("current store state",useApiStore.getState())
+
   return (
     <>
       <Header />
@@ -101,7 +83,6 @@ export default function CategoryDetailsPage() {
                 <CategoryProductList 
                      products={apiItems} 
                      categoryId={categoryId}
-                     onProductSelect={handleProductSelect}
                 />
                 </div>              
             </div>
@@ -117,7 +98,7 @@ export default function CategoryDetailsPage() {
                   <OrderOptions isDisabled={false} />
                 </div>
                 
-                <OrderTable />
+                <OrderTable columns={details?.columnSchemas || []} />
               </>
             )}
 

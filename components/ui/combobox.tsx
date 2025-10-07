@@ -48,6 +48,7 @@ export interface ComboboxProps {
   showTitle?: boolean
   badgeCount?: number
   badgeLabel?: string
+  handleSearch?: (value: string) => void
 }
 
 export function Combobox({
@@ -71,6 +72,7 @@ export function Combobox({
   showTitle = false,
   badgeCount,
   badgeLabel,
+  handleSearch,
 }: ComboboxProps) {
   const [open, setOpen] = React.useState(false)
 
@@ -153,9 +155,9 @@ export function Combobox({
         </PopoverTrigger>
       <PopoverContent className={cn("w-[var(--radix-popover-trigger-width)] p-0", popoverClassName)} align="start">
         <Command>
-          <CommandInput placeholder={searchPlaceholder} className="h-9" />
+          <CommandInput placeholder={searchPlaceholder} className="h-9" onValueChange={handleSearch} />
           <CommandList className="max-h-[400px]">
-            <CommandEmpty>{emptyMessage}</CommandEmpty>
+            <CommandEmpty className="p-4">{emptyMessage}</CommandEmpty>
             {/* check if items is an array or object */}
             {Array.isArray(items) ? (
               <CommandGroup>

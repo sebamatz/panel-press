@@ -1,10 +1,12 @@
 // Re-export types and store from the Zustand store
-export type { CategoryItem, CategoryDetails, ProductDetails } from './stores/apiStore'
-export { useApiStore } from './stores/apiStore'
+import { fetchProductDetailsList } from '@/api/fetch'
+export type { CategoryItem, CategoryDetails, ProductDetails } from './stores/appStore'
+export { useApiStore } from './stores/appStore'
+
 
 // Create hooks that mimic RTK Query behavior for easier migration
-import { useApiStore } from './stores/apiStore'
-import { useEffect } from 'react'
+import { useApiStore } from './stores/appStore'
+import { useEffect, useState } from 'react'
 
 // Hook for fetching base categories
 export function useGetBaseCategoriesQuery() {
@@ -56,59 +58,38 @@ export function useGetCategoryDetailsQuery(categoryId: string | number) {
   }
 }
 
-// Hook for fetching product details
-export function useGetProductDetailsQuery({ productId, categoryId = 1 }: { productId: string | number; categoryId?: string | number }) {
-  const { 
-    productDetails, 
-    productDetailsLoading, 
-    productDetailsError, 
-    fetchProductDetails 
-  } = useApiStore()
-
-  const key = `${productId}-${categoryId}`
-  const details = productDetails[key]
-  const loading = productDetailsLoading[key] || false
-  const error = productDetailsError[key] || null
-
-  useEffect(() => {
-    if (!details && !loading && !error) {
-      fetchProductDetails(productId, categoryId)
-    }
-  }, [productId, categoryId, details, loading, error, fetchProductDetails])
-
-  return {
-    data: details,
-    isLoading: loading,
-    error: error,
-    refetch: () => fetchProductDetails(productId, categoryId)
-  }
-}
-
 // Hook for fetching product details list (ProductDetailsList)
-export function useGetProductDetailsListQuery({ baseCategory, lastId, searchValue = "" }: { baseCategory: string | number; lastId: string | number; searchValue?: string }, options?: { skip?: boolean }) {
+export function useGetProductDetailsListQuery({ baseCategory }: { baseCategory: string | number }, options?: { skip?: boolean }) {
+ 
+ const [data, setData] = useState<any>(null)
   const { 
+    selectedCategoryDetails,
     productDetailsList, 
     productDetailsListLoading, 
     productDetailsListError, 
-    fetchProductDetailsList 
   } = useApiStore()
-
-  const key = `${baseCategory}-${lastId}-${searchValue}`
+  
+  let searchValue = ""
+  const key = `${baseCategory}-${selectedCategoryDetails}-${searchValue}`
   const details = productDetailsList[key]
   const loading = productDetailsListLoading[key] || false
   const error = productDetailsListError[key] || null
 
-  useEffect(() => {
-    // Only fetch if not skipped and conditions are met
-    if (!options?.skip && !details && !loading && !error) {
-      fetchProductDetailsList(baseCategory, lastId, searchValue)
-    }
-  }, [baseCategory, lastId, searchValue, details, loading, error, fetchProductDetailsList, options?.skip])
+
+  const handleSearch = async (value: string) => {
+    searchValue = value
+    const details = await fetchProductDetailsList(baseCategory, selectedCategoryDetails, searchValue)
+    setData(details)
+
+  }
+
+
 
   return {
     data: details,
     isLoading: loading,
     error: error,
-    refetch: () => fetchProductDetailsList(baseCategory, lastId, searchValue)
+    refetch: () => fetchProductDetailsList(baseCategory, lastId, searchValue),
+    handleSearch: handleSearch
   }
 }

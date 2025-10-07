@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { ComboboxItem, Combobox } from "@/components/ui/combobox"
-import { useApiStore } from "@/lib/stores/apiStore"
+import { useApiStore } from "@/lib/stores/appStore"
 import { Package } from "lucide-react"
 
 interface CategoryProductSelectorProps {
@@ -15,15 +15,14 @@ export function CategoryProductList({
   onProductSelect 
 }: CategoryProductSelectorProps) {
   const [selectedItem, setSelectedItem] = useState<ComboboxItem | null>(null)
-  const { fetchColumnSchema } = useApiStore()
+  const { fetchColumnSchema,setSelectedCategoryDetails } = useApiStore()
 
   const handleProductSelect = (item: ComboboxItem | null) => {
-    debugger;
     setSelectedItem(item)
-    onProductSelect?.(item?.id || null)
     
     // Fetch column schema when a category is selected
     if (item?.id) {
+      setSelectedCategoryDetails(item.id)
       fetchColumnSchema(categoryId, item.id)
     }
   }
