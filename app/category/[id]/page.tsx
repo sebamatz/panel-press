@@ -21,6 +21,7 @@ export default function CategoryDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const categoryId = params.id as string
+  const { columnSchemas } = useApiStore()
 
   const { data: details, isLoading: loading, error } = useGetCategoryDetailsQuery(categoryId)
   const { setSelectedCategoryDetails } = useApiStore() 
@@ -97,8 +98,9 @@ export default function CategoryDetailsPage() {
                 <div className="w-full">
                   <OrderOptions isDisabled={false} />
                 </div>
+
                 
-                <OrderTable columns={details?.columnSchemas || []} />
+                {columnSchemas && columnSchemas.length > 0 && <OrderTable columns={columnSchemas || []} />}
               </>
             )}
 
