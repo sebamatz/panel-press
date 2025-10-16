@@ -112,7 +112,7 @@ export const useApiStore = create<ApiState>()(
       categoryDetailsError: {},
       selectedCategoryDetails: null,
       setSelectedCategoryDetails: (details: string | number | null) => set({ selectedCategoryDetails: details }),
-       
+
       productDetails: {},
       productDetailsLoading: {},
       productDetailsError: {},
@@ -171,14 +171,19 @@ export const useApiStore = create<ApiState>()(
           columnSchemasError: { ...state.columnSchemasError, [key]: null },
         }));
 
-        const data = await fetchColumnSchema(baseCategory, series);        
+        const data = await fetchColumnSchema(baseCategory, series);
+
+        const parsedData = data.map((item: any) => (
+          { ...item, values: item.values ? JSON.parse(item.values) : "" }
+        )
+        );
         set((state) => ({
-          columnSchemas: data,
+          columnSchemas: parsedData,
           columnSchemasLoading: { ...state.columnSchemasLoading, [key]: false },
           columnSchemasError: { ...state.columnSchemasError, [key]: null },
         }));
       },
-      
+
 
       fetchProductDetailsList: async (
         baseCategory: string | number,
@@ -187,7 +192,7 @@ export const useApiStore = create<ApiState>()(
       ) => {
         const key = `${baseCategory}-${lastId}-${searchValue}`;
 
-      
+
 
         const data = await fetchProductDetailsList(baseCategory, lastId, searchValue);
         const details = processProductDetailsListResponse(data);
