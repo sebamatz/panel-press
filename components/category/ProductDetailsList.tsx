@@ -5,7 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useState } from "react"
 import { Combobox } from "../ui/combobox"
 import { useParams } from "next/navigation"
-import { fetchProductDetailsList } from "@/api/fetch"
+import { fetchCategoryProducts } from "@/api/categories"
 
 interface ProductDetailsPanelProps {
   onSelectionChange?: (selectedItem: any) => void
@@ -32,7 +32,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
       setError(null)
       setLoading(true)
       setItems([])
-      const data = await fetchProductDetailsList(
+      const data = await fetchCategoryProducts(
         categoryId as string | number,
         selectedCategoryDetails as string | number,
         value || ""

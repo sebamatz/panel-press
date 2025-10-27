@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Select,
   SelectContent,
@@ -7,114 +7,118 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import ColorCodeInput from "./ColorCodeInput";
 import ColorManufacturer from "./ColorManufacturer";
 import ManifacturerColors from "./ManifacturerColors";
+import { fetchColorManufacturers, fetchColorsByManufacturer, fetchColorTypes } from "@/api/colors";
 
-export default function ColorSelections() {
+export default function ColorSelections({ isSecondary = false }) {
   const {
     colorTypes,
-    primaryManifacturer,
-    primaryColorType,
-    primarySelectedManifacturer,
-    primarySelectedTrdpgroup,
-    primaryColorValue,
-    setPrimaryColorType,
-    setPrimarySelectedManifacturer,
-    setPrimaryColorValue,
-    setPrimaryManifacturer,
-    setPrimaryColorData,
-    fetchColors,
-    resetPrimaryManufacturer,
-    fetchManufacturers,
+    setColorTypes,
+    colorSelectionState,
+    setColorSelectionState,
   } = useColorSelectionStore();
 
-  const [open, setOpen] = useState(false);
+  const index = isSecondary ? 1 : 0;
 
   const handleChangeColorType = useCallback(
     (value: string) => {
       //reset all values
-      setPrimaryColorValue("");
-      setPrimaryColorType(value);
-      resetPrimaryManufacturer();
+      const newState = [...colorSelectionState];
+      newState[index] = {
+        ...newState[index],
+        colorType: value,
+        // Clear dependent selections when color type changes
+        selectedManifacturer: "",
+        manifacturer: [],
+        colorValue: "",
+        colorData: [],
+      };
+      setColorSelectionState(newState);
     },
-    [setPrimaryColorValue, setPrimaryColorType, resetPrimaryManufacturer]
-  );
-
-  const handleChangeManifacturer = useCallback(
-    (value: string) => {
-      setPrimaryColorValue("");
-      setPrimarySelectedManifacturer(value);
-    },
-    [setPrimaryColorValue, setPrimarySelectedManifacturer]
-  );
-
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setPrimaryColorValue(value);
-    },
-    [setPrimaryColorValue]
-  );
-
-  const handleChangeColor = useCallback(
-    (value: string) => {
-      setPrimaryColorValue(value);
-    },
-    [setPrimaryColorValue]
+    [colorSelectionState, setColorSelectionState, index]
   );
 
   const handleGetColor = useCallback(async () => {
-    await fetchColors({
-      colorType: primaryColorType,
-      selectedManifacturer: primarySelectedManifacturer,
-      colorValue: primaryColorValue,
-    }, false);
-  }, [primaryColorType, primaryColorValue, primarySelectedManifacturer, fetchColors]);
+    const current = colorSelectionState[index];
+    if (!current) return;
+    const colors = await fetchColorsByManufacturer({
+      colorType: current.colorType,
+      selectedManifacturer: current.selectedManifacturer,
+      colorValue: current.colorValue,
+    });
+    const prevColors = current.colorData || [];
+    const isSame = JSON.stringify(prevColors) === JSON.stringify(colors);
+    if (isSame) return;
+    const newState = [...colorSelectionState];
+    newState[index] = { ...newState[index], colorData: colors };
+    setColorSelectionState(newState);
+  }, [colorSelectionState, setColorSelectionState, index]);
+
+
+  const getManifacturers = useCallback(async () => {
+    const manufacturers = await fetchColorManufacturers();
+    const current = colorSelectionState[index];
+    const prev = current?.manifacturer || [];
+    const isSame = JSON.stringify(prev) === JSON.stringify(manufacturers);
+    if (isSame) return;
+    const newState = [...colorSelectionState];
+    newState[index] = { ...newState[index], manifacturer: manufacturers };
+    setColorSelectionState(newState);
+  }, [colorSelectionState, setColorSelectionState, index]);
+
+  const getColortypes = useCallback(async () => {
+    const colortypes = await fetchColorTypes();
+    // Store available color types globally in the store
+    setColorTypes(colortypes);
+  }, [setColorTypes]);
 
   useEffect(() => {
-    if (primarySelectedManifacturer && primaryColorType !== "3") {
+    const current = colorSelectionState[index];
+    if (current?.selectedManifacturer && current?.colorType !== "3") {
       handleGetColor();
     }
-  }, [primarySelectedManifacturer, handleGetColor, primaryColorType]);
+  }, [index, colorSelectionState[index]?.selectedManifacturer, colorSelectionState[index]?.colorType, handleGetColor]);
 
   // Initialize color types on component mount
   useEffect(() => {
-    const { fetchColorData } = useColorSelectionStore.getState();
-    fetchColorData(30);
-  }, []);
+    if (!colorTypes || colorTypes.length === 0) {
+      getColortypes();
+    }
+  }, [getColortypes, colorTypes]);
 
   // Fetch manufacturers when color type changes
   useEffect(() => {
-    if (primaryColorType) {
-      const { fetchColorData } = useColorSelectionStore.getState();
-      if (primaryColorType === '3') {
-        fetchColorData(50);
+    const current = colorSelectionState[index];
+    if (!current) return;
+    if (current.colorType) {
+      if (current.colorType !== "3") {
+        getManifacturers();
       } else {
-        fetchColorData(40);
+        // Clear manufacturer-related selections when manual code input is selected
+        // Only update if values are not already cleared to avoid unnecessary state changes
+        const needsClear =
+          (current.manifacturer && current.manifacturer.length > 0) ||
+          !!current.selectedManifacturer ||
+          (current.colorData && current.colorData.length > 0);
+
+        if (needsClear) {
+          const newState = [...colorSelectionState];
+          newState[index] = {
+            ...newState[index],
+            manifacturer: [],
+            selectedManifacturer: "",
+            colorData: [],
+          };
+          setColorSelectionState(newState);
+        }
       }
     }
-  }, [primaryColorType]);
+  }, [index, colorSelectionState[index]?.colorType, getManifacturers, setColorSelectionState]);
 
-  return primarySelectedTrdpgroup === 1 ? (
+  return colorSelectionState[isSecondary ? 1 : 0]?.selectedTrdpgroup === 1 ? ( 
     <div className="space-y-4 w-full">
       <div className="flex items-baseline gap-4">
         {/* Color Type Selection */}
@@ -122,7 +126,7 @@ export default function ColorSelections() {
           <Label htmlFor="color-type-select" className="text-sm font-medium">
             Τύπος Χρώματος
           </Label>
-          <Select value={primaryColorType} onValueChange={handleChangeColorType}>
+          <Select value={colorSelectionState[isSecondary ? 1 : 0]?.colorType} onValueChange={handleChangeColorType}>
             <SelectTrigger id="color-type-select" className="w-full max-w-sm">
               <SelectValue placeholder="Επιλέξτε τύπο χρώματος" />
             </SelectTrigger>
@@ -136,9 +140,9 @@ export default function ColorSelections() {
           </Select>
         </div>
         {/* Conditional rendering based on colorType */}
-        {primaryColorType === "3" ? <ColorCodeInput /> : <ColorManufacturer />}
+        {colorSelectionState[isSecondary ? 1 : 0]?.colorType === "3" ? <ColorCodeInput /> : <ColorManufacturer isSecondary={isSecondary} />}
         {/* Color Selection Combobox */}
-        {primarySelectedManifacturer && primaryColorType !== "3" && <ManifacturerColors />}
+        {colorSelectionState[isSecondary ? 1 : 0]?.selectedManifacturer && colorSelectionState[isSecondary ? 1 : 0]?.colorType !== "3" && <ManifacturerColors isSecondary={isSecondary} />}
       </div>
     </div>
   ) : (

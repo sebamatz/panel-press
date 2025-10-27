@@ -3,16 +3,22 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 
-export default function ColorCodeInput() {
-  const { primaryColorValue, setPrimaryColorValue, primarySelectedColorCompany } = useColorSelectionStore();
+export default function ColorCodeInput({ isSecondary = false }) {
+  const { colorSelectionState, setColorSelectionState } = useColorSelectionStore();
+  const index = isSecondary ? 1 : 0;
+  const current = colorSelectionState[index];
   const handleChangeColorValue = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const c = (event.target as HTMLInputElement).value;
-    setPrimaryColorValue(c);
+    const next = [...colorSelectionState];
+    if (next[index]) {
+      next[index] = { ...next[index], colorValue: c };
+      setColorSelectionState(next);
+    }
   };
 
-  if(!primarySelectedColorCompany) return null;
+  if (!current || !current.selectedColorCompany) return null;
 
   return (
     <div className="flex flex-col gap-2">
@@ -24,7 +30,7 @@ export default function ColorCodeInput() {
           id="color-code-input"
           onChange={handleChangeColorValue}
           disabled={false}
-          value={primaryColorValue || ""}
+          value={current?.colorValue || ""}
           placeholder="Εισάγετε κωδικό..."
         />
       </div>

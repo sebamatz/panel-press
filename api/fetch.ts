@@ -1,4 +1,8 @@
-import { company, domain } from "../config";
+import { bOption } from "@/api/utils";
+import {  domain } from "@/config";
+import { companySettings } from "@/config"
+
+import { getBaseCategoriesRequestParams } from "@/api/types";
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -51,7 +55,7 @@ export const fechGroups = async () => {
 
 export const searchBranches = async (searchValue: string) => {
   const data = {
-    Company: company,
+    Company: companySettings.company,
     SearchValue: searchValue,
   };
 
@@ -62,7 +66,7 @@ export const searchBranches = async (searchValue: string) => {
 
 export const getbranches = async (afm: string) => {
   const data = {
-    Company: company,
+    Company: companySettings.company,
     AFM: afm,
   };
 
@@ -73,7 +77,7 @@ export const getbranches = async (afm: string) => {
 //put order
 const defaults = [
   {
-    Company: company,
+    Company: companySettings.company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -84,7 +88,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: company,
+    Company: companySettings.company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -95,7 +99,7 @@ const defaults = [
     qtY2: 0,
   },
   {
-    Company: company,
+    Company: companySettings.company,
     bOption: 0,
     trdr: 3975,
     trdbranch: 125,
@@ -123,6 +127,17 @@ export async function postData(url = "", data = defaults) {
 
 // /erpapi/putorder
 //${domain}/erpapi/getorders/pdf?pars=%7B%22Company%22%3A1%2C%22Id%22%3A%22179631%22%7D//
+
+// Submit orders to backend
+export async function submitOrders(orders: any[]) {
+  try {
+    const response = await postData('/erpapi/putorder', orders)
+    return response
+  } catch (error) {
+    console.error('Error submitting orders:', error)
+    throw error
+  }
+}
 
 export async function downloadPdf(payload: any, code) {
   try {
@@ -165,7 +180,7 @@ export async function downloadPdf(payload: any, code) {
 // ΠΡΟΜΗΘΕΥΤΕΣ (ΕΞΩΤΕΡΙΚΑ ΒΑΦΕΙΑ) : επιλέξτε TRDR,NAME WHERE SUPPLIER.TRDPGROUP = 1
 // Fields "ccCPOUDRAID": , "CCCBAFEIOID": must return for each line with post put /erpapi/putorder
 
-export interface IGetItems {
+export interface IGetItemPayload {
   Company: number;
   BOption: number;
   AFM?: string | null;
@@ -181,7 +196,7 @@ export interface IGetItems {
   qtY2?: any;
 }
 
-export const getItems = async (payload: IGetItems) => {
+export const getItems = async (payload: IGetItemPayload) => {
   const params = {
     ...payload,
   };
@@ -189,87 +204,4 @@ export const getItems = async (payload: IGetItems) => {
   const response = await fetch(constructApi(url, params));
   const data = await response.json();
   return data;
-};
-
-
-export const fetchBaseCategories = async () => {
-  const payload = {
-    Company: 20,
-    BOption: 70,
-  };
-  const url = `${ domain }/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-  })
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-  
-  const data = await response.json()
-  return data;
-};
-
-export const fetchCategoryDetails = async (categoryId: string | number) => {
-  const payload = {
-    Company: 20,
-    BOption: 70,
-    id: categoryId,
-  };
-  try {
-    const url = `${ domain }/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`
-    const response = await fetch(url, {
-      method: 'GET',
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    const data = await response.json()
-    return data;
-  } catch (error) {
-    console.error('Error fetching category details:', error);
-    throw error;
-  }
-};
-
-export const fetchColumnSchema = async (baseCategory: string | number, series: string | number) => {
-  try {
-    const url = `${domain}/erpapi/panel/schema/columns?BaseCategory=${baseCategory}&Series=${series}`
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-    })
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error('Error fetching column schema:', error);
-    throw error;
-  }
-};
-
-
-export const fetchProductDetailsList = async (baseCategory: string | number, lastId: string | number, searchValue: string) => {
-  try {
-  const payload = {
-    Company: 20, BOption: 70, id: baseCategory, LastId: lastId, SearchValue: searchValue
-  };
-  const url = `${domain}/erpapi/getitems/obj?pars=${encodeURIComponent(JSON.stringify(payload))}`;
-  const response = await fetch(url, {
-    method: 'GET',
-    });
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching product details list:', error);
-    throw error;
-  }
 };

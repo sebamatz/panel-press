@@ -3,7 +3,6 @@
  * Handles various data structures that might be returned from the API
  */
 export function processApiData(apiData: any): any[] {
-  console.log("Processing API data:", apiData)
 
   let processedItems: any[] = []
 
@@ -80,7 +79,6 @@ export function processApiData(apiData: any): any[] {
     }
   }
 
-  console.log("Processed items:", processedItems)
   return processedItems
 }
 

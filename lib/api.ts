@@ -1,6 +1,5 @@
 // Re-export types and store from the Zustand store
-import { fetchProductDetailsList } from '@/api/fetch'
-export type { CategoryItem, CategoryDetails, ProductDetails } from './stores/appStore'
+export type { CategoryItem, CategoryDetails, ProductDetails } from './stores/types'
 export { useApiStore } from './stores/appStore'
 
 
@@ -55,41 +54,5 @@ export function useGetCategoryDetailsQuery(categoryId: string | number) {
     isLoading: loading,
     error: error,
     refetch: () => fetchCategoryDetails(categoryId)
-  }
-}
-
-// Hook for fetching product details list (ProductDetailsList)
-export function useGetProductDetailsListQuery({ baseCategory }: { baseCategory: string | number }, options?: { skip?: boolean }) {
- 
- const [data, setData] = useState<any>(null)
-  const { 
-    selectedCategoryDetails,
-    productDetailsList, 
-    productDetailsListLoading, 
-    productDetailsListError, 
-  } = useApiStore()
-  
-  let searchValue = ""
-  const key = `${baseCategory}-${selectedCategoryDetails}-${searchValue}`
-  const details = productDetailsList[key]
-  const loading = productDetailsListLoading[key] || false
-  const error = productDetailsListError[key] || null
-
-
-  const handleSearch = async (value: string) => {
-    searchValue = value
-    const details = await fetchProductDetailsList(baseCategory, selectedCategoryDetails, searchValue)
-    setData(details)
-
-  }
-
-
-
-  return {
-    data: details,
-    isLoading: loading,
-    error: error,
-    refetch: () => fetchProductDetailsList(baseCategory, lastId, searchValue),
-    handleSearch: handleSearch
   }
 }

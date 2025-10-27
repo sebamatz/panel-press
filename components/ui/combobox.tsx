@@ -120,8 +120,6 @@ export function Combobox({
 
   const defaultRenderSelected = (item: ComboboxItem) => item.name
 
-  console.log("items", items)
-
   return (
     <div className={cn("space-y-4", className)}>
       {showTitle && title && (

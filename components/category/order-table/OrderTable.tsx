@@ -1,10 +1,13 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useApiStore } from "@/lib/api";
 import { ProductDetailsList } from "../ProductDetailsList";
-import { Edit, Save, Trash2, X } from "lucide-react";
+import { Edit, Save, Trash2, X, Send } from "lucide-react";
 import EditableCell from "./EditableCell";
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
+import { useOrderTableStore } from "@/lib/stores/orderTableStore";
+import { toast } from "sonner";
 
 // Parse column values safely into options array
 export function parseValues(values?: string | null): any[] {
@@ -52,13 +55,33 @@ const ProductCellComponent: React.FC<{
   );
 });
 
+
 const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
-  const [data, setData] = useState<Record<string, any>[]>(initialData);
-  const [isAdding, setIsAdding] = useState(false);
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newRow, setNewRow] = useState<Record<string, any>>({});
-  const [draftRow, setDraftRow] = useState<Record<string, any>>({});
   const { columnSchemas } = useApiStore();
+  
+  // Use store state and actions
+  const {
+    orders: data,
+    isAdding,
+    editingIndex,
+    newRow,
+    draftRow,
+    isSubmitting,
+    submitError,
+    addOrder,
+    deleteOrder,
+    setIsAdding,
+    setEditingIndex,
+    setDraftRow,
+    setNewRow,
+    updateNewRowField,
+    updateDraftRowField,
+    saveEdit,
+    cancelEdit,
+    submitOrders,
+    clearOrders,
+    resetUI
+  } = useOrderTableStore();
 
   const getDisplayText = useCallback((value: any, field?: string) => {
     if (value == null) return "";
@@ -74,6 +97,11 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
   const getCellText = useCallback((col: any, value: any, row?: Record<string, any>) => {
     if (value == null) return "";
     if (value === "undefined" || value === "null") return "";
+
+    // Handle color field specially
+    if (col.field === "color") {
+      return value || "";
+    }
 
     // Handle arrays (e.g., DependOndimesionSelect returns [selectedOption])
     if (Array.isArray(value)) {
@@ -123,19 +151,7 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
     return getDisplayText(value, col.field);
   }, [getDisplayText]);
 
-  const handleAdd = () => {
-    setNewRow({});
-    setIsAdding(true);
-  };
-
-  const handleInputChange = useCallback((field: string, value: any) => {
-    setNewRow((prev) => ({ ...prev, [field]: value }));
-  }, []);
-
   const normalizeRowForSave = useCallback((row: Record<string, any>) => {
-
-    console.log(row, "row");
-
     const normalized: Record<string, any> = { ...row };
     Object.keys(normalized).forEach((key) => {
       const fieldLower = key.toString().toLowerCase();
@@ -148,53 +164,59 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
         }
       }
     });
-    return row;
+    return normalized;
   }, []);
+
+  const handleAdd = () => {
+    setNewRow({});
+    setIsAdding(true);
+  };
+
+  const handleInputChange = useCallback((field: string, value: any) => {
+    updateNewRowField(field, value);
+  }, [updateNewRowField]);
 
   const handleSave = () => {
     if(newRow.product == null){
-      alert("Please select a product");
+      toast.error("Please select a product");
       return;
     }
     const normalized = normalizeRowForSave(newRow);
-    setData((prev) => [...prev, normalized]);
-    setIsAdding(false);
-    setNewRow({});
+    addOrder(normalized);
+    resetUI();
   };
 
   const handleDelete = useCallback((rowIndex: number) => {
-    setData((prev) => prev.filter((_, i) => i !== rowIndex));
-    if (editingIndex !== null) {
-      if (rowIndex === editingIndex) {
-        setEditingIndex(null);
-        setDraftRow({});
-      } else if (rowIndex < editingIndex) {
-        setEditingIndex(editingIndex - 1);
-      }
-    }
-  }, [editingIndex]);
+    deleteOrder(rowIndex);
+  }, [deleteOrder]);
 
   const handleEdit = useCallback((rowIndex: number) => {
     setEditingIndex(rowIndex);
     setDraftRow({ ...data[rowIndex] });
-  }, [data]);
+  }, [data, setEditingIndex, setDraftRow]);
 
   const handleEditInputChange = useCallback((field: string, value: any) => {
-    setDraftRow((prev) => ({ ...prev, [field]: value }));
-  }, []);
+    updateDraftRowField(field, value);
+  }, [updateDraftRowField]);
 
   const handleSaveEdit = useCallback(() => {
     if (editingIndex === null) return;
     const normalized = normalizeRowForSave(draftRow);
-    setData((prev) => prev.map((item, idx) => (idx === editingIndex ? normalized : item)));
-    setEditingIndex(null);
-    setDraftRow({});
-  }, [editingIndex, draftRow, normalizeRowForSave]);
+    saveEdit();
+  }, [editingIndex, draftRow, normalizeRowForSave, saveEdit]);
 
   const handleCancelEdit = useCallback(() => {
-    setEditingIndex(null);
-    setDraftRow({});
-  }, []);
+    cancelEdit();
+  }, [cancelEdit]);
+
+  const handleSubmitOrders = async () => {
+    try {
+      await submitOrders();
+      toast.success("Orders submitted successfully!");
+    } catch (error) {
+      toast.error("Failed to submit orders");
+    }
+  };
 
   const productColumn = useMemo(() => ({
     columnId: 123 - 23,
@@ -219,17 +241,37 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
   const encodedColumnSchemasWithoutId = columns.filter((col) => col.title !== "ΚΩΔΙΚΟΣ");
   const encodedColumnSchemas = useMemo(() => [productColumn, ...encodedColumnSchemasWithoutId], [productColumn, encodedColumnSchemasWithoutId]);
 
-
+  const { primaryColorValue } = useColorSelectionStore();
+  useEffect(() => {
+    if (primaryColorValue) {
+      handleInputChange("color", primaryColorValue);
+    }
+  }, [primaryColorValue, handleInputChange]);
 
   useEffect(() => {  
-    console.log(newRow, "newRow");
-  }, [data]);
+  }, [newRow]);
   return (
     <Card className="p-4 shadow-md">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Πίνακας Παραγγελιών</h2>
-        <Button onClick={handleAdd} disabled={isAdding || editingIndex !== null}>Προσθήκη</Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={handleSubmitOrders} 
+            disabled={data.length === 0 || isSubmitting}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            <Send className="h-4 w-4 mr-2" />
+            {isSubmitting ? "Submitting..." : "Submit Orders"}
+          </Button>
+          <Button onClick={handleAdd} disabled={isAdding || editingIndex !== null}>Προσθήκη</Button>
+        </div>
       </div>
+      
+      {submitError && (
+        <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-700">
+          {submitError}
+        </div>
+      )}
 
       <CardContent>
         <table className="w-full text-xs border-collapse">
@@ -257,7 +299,18 @@ const DynamicTable: React.FC<DynamicTableProps> = ({ initialData = [] }) => {
                     />
                   ) : (
                     <td key={col.columnId} className="border border-gray-300 p-2">
-                      {getCellText(col, row[col.field], row)}
+                      {col.field === "color" && row[col.field] ? (
+                        <div className="flex items-center gap-2">
+                          <span>{getCellText(col, row[col.field], row)}</span>
+                          <div 
+                            className="w-4 h-4 border border-gray-300 rounded"
+                            style={{ backgroundColor: row[col.field] }}
+                            title={row[col.field]}
+                          />
+                        </div>
+                      ) : (
+                        getCellText(col, row[col.field], row)
+                      )}
                     </td>
                   )
                 ))}

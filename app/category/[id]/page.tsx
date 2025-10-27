@@ -3,16 +3,13 @@
 import { useParams, useRouter } from "next/navigation"
 import { useGetCategoryDetailsQuery } from "@/lib/api"
 import { Header } from "@/components/header"
-import { useState } from "react"
 import {
   CategoryLoadingState,
   CategoryErrorState,
   CategoryDetailsHeader,
   CategoryEmptyState,
   CategoryDebugInfo,
-  extractCategoryName,
-  ProductDetailsList
-} from "@/components/category"
+  extractCategoryName} from "@/components/category"
 import { CategoryProductList } from "@/components/category/CategoryProductList"
 import OrderTable from "@/components/category/order-table/OrderTable"
 import { useApiStore } from "@/lib/stores/appStore"
@@ -24,7 +21,6 @@ export default function CategoryDetailsPage() {
   const { columnSchemas } = useApiStore()
 
   const { data: details, isLoading: loading, error } = useGetCategoryDetailsQuery(categoryId)
-  const { setSelectedCategoryDetails } = useApiStore()
   const handleBack = () => {
     router.push("/")
   }
@@ -65,6 +61,7 @@ export default function CategoryDetailsPage() {
   // log current store state
   console.log("current store state", useApiStore.getState())
 
+
   return (
     <>
       <Header />
@@ -98,8 +95,6 @@ export default function CategoryDetailsPage() {
               <div className="w-full">
                 <OrderOptions isDisabled={false} />
               </div>
-
-
               {columnSchemas && columnSchemas.length > 0 && <OrderTable columns={columnSchemas || []} />}
             </>
           )}

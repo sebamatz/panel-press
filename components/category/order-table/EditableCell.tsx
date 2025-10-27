@@ -1,5 +1,6 @@
 import React from "react";
 import DependOndimesionSelect from "./DependOndimesionSelect";
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 
 export default function EditableCell({
   selectedValues,
@@ -13,6 +14,7 @@ export default function EditableCell({
   onChange: (field: string, value: any) => void;
 }) {
   const options = column.values || [];
+  const { primaryColorValue, setPrimaryColorValue } = useColorSelectionStore();
 
   if (column.field === "gemisi" || column.field === "lamarina") {
     return (
@@ -26,6 +28,37 @@ export default function EditableCell({
       </td>
     );
   }
+
+  // if (column.field === "color") {
+  //   const handleColorChange = (colorValue: string) => {
+  //     setPrimaryColorValue(colorValue);
+  //     onChange(column.field, colorValue);
+  //   };
+
+  //   // Use the value from the row data if available, otherwise use the store value
+  //   const currentValue = value || primaryColorValue || "";
+
+  //   return (
+  //     <td className="border border-gray-300 p-2">
+  //       <div className="flex items-center gap-2">
+  //         <input
+  //           type="text"
+  //           className="w-full border rounded p-1"
+  //           value={currentValue}
+  //           onChange={(e) => handleColorChange(e.target.value)}
+  //           placeholder="Enter color value"
+  //         />
+  //         {currentValue && (
+  //           <div 
+  //             className="w-6 h-6 border border-gray-300 rounded"
+  //             style={{ backgroundColor: currentValue }}
+  //             title={currentValue}
+  //           />
+  //         )}
+  //       </div>
+  //     </td>
+  //   );
+  // }
 
   if ((column as any).component) {
     const Component = (column as any).component as React.ComponentType<any>;
