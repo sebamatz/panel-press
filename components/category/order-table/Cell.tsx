@@ -18,6 +18,18 @@ function ReadableCell({ value }: { value: any; column: ColumnSchema }) {
   );
 }
 
+// define nterface for componet
+export interface ICellComponentProps {
+  selectedValues: any;
+  column: ColumnSchema;
+  value: any;
+  onChange?: (field: string, value: any) => void;
+  readOnly: boolean;
+  field: string;  
+  onSelectionChange?: (field: string, value: any) => void;
+  options?: any;
+}
+
 export default function Cell({
   selectedValues,
   readOnly,
@@ -32,11 +44,9 @@ export default function Cell({
   readOnly: boolean;
 }) {
 
-  debugger;
-
   // If the column is locked and has a component, render the component
   if (column.locked && (column as any).component) {
-    const Component = (column as any).component as React.ComponentType<any>;
+    const Component = (column as any).component as React.ComponentType<ICellComponentProps>;
     return (
       <td className="border border-gray-300 p-2">
         <Component
@@ -45,6 +55,8 @@ export default function Cell({
           value={value}
           onChange={onChange}
           onSelectionChange={(v: any) => onChange && onChange(column.field, v)}
+          selectedValues={selectedValues}
+          column={column}
         />
       </td>
     );
@@ -57,7 +69,7 @@ export default function Cell({
 
   // If the column is editable and has a component, render the component
   if ((column as any).component) {
-    const Component = (column as any).component as React.ComponentType<any>;
+    const Component = (column as any).component as React.ComponentType<ICellComponentProps>;
     // Pass both onChange and onSelectionChange to be compatible with custom components
     return (
       <td className="border border-gray-300 p-2">
@@ -114,7 +126,7 @@ export default function Cell({
         <select
           className="w-full border rounded p-1"
           value={value || ""}
-          onChange={(e) => onChange(column.field, e.target.value)}
+          onChange={(e) => onChange && onChange(column.field, e.target.value)}
         >
           <option value="">Select...</option>
           {column.values.map((v: any, i: number) => {
@@ -162,7 +174,7 @@ export default function Cell({
         type={column.colType === "number" ? "number" : "text"}
         className="w-full border rounded p-1"
         value={value || ""}
-        onChange={(e) => onChange(column.field, e.target.value)}
+        onChange={(e) => onChange && onChange(column.field, e.target.value)}
       />
     </td>
   );

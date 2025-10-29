@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { submitOrders } from '@/api/fetch'
-import { company } from '@/config'
+import { companySettings } from '@/config'
 
 export interface OrderRow {
   [key: string]: any
@@ -97,6 +97,11 @@ export const useOrderTableStore = create<OrderTableState>()(
           newRow: { ...state.newRow, [field]: value }
         }))
       },
+      updateDraftRowField: (field, value) => {
+        set((state) => ({
+          draftRow: { ...state.draftRow, [field]: value }
+        }))
+      },
       updateAllRowsField: (field: string, value: any) => {
         set((state) => ({
           orders: state.orders.map((order) => ({ ...order, [field]: value }))
@@ -107,8 +112,7 @@ export const useOrderTableStore = create<OrderTableState>()(
       saveEdit: () => {
         const state = get()
         if (state.editingIndex !== null) {
-          const normalized = normalizeRowForSave(state.draftRow)
-          state.updateOrder(state.editingIndex, normalized)
+          state.updateOrder(state.editingIndex, state.draftRow)
           state.resetUI()
         }
       },
@@ -133,7 +137,7 @@ export const useOrderTableStore = create<OrderTableState>()(
         try {
           // Transform orders to API format
           const apiOrders = state.orders.map(order => ({
-            Company: company,
+            Company: companySettings.company,
             bOption: 0,
             trdr: 3975, // Default trader ID - should be dynamic
             trdbranch: 125, // Default branch ID - should be dynamic

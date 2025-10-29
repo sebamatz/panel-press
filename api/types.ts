@@ -33,6 +33,22 @@ export interface IGetItemPayload {
   qtY2?: any;
 }
 
+
+export interface IGetPricePayload {
+  Company?: number;
+  BOption?: number;
+  id?: any;
+  LastId?: any;
+  JToken?: IGetPriceJToken;
+}
+
+
+export interface IGetPriceJToken {
+  QTY: number;
+  UTBL03: number;
+  gemisi: number;
+  lamarina: number;
+}
 export interface IBranch {
   trdbranch: number;
   branchcode: string;

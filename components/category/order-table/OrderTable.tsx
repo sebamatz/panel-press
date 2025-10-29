@@ -13,6 +13,7 @@
 
 import Cell from "./Cell";
 import DependOndimesionSelect from "./DependOndimesionSelect";
+import PriceCell from "./PriceCell";
 
   // Parse column values safely into options array
 
@@ -79,8 +80,8 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
         toast.error("Please select a product");
         return;
       }
-      const normalized = normalizeRowForSave(newRow);
-      addOrder(normalized);
+      // const normalized = normalizeRowForSave(newRow);
+      addOrder(newRow);
       resetUI();
     };
 
@@ -99,9 +100,8 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
 
     const handleSaveEdit = useCallback(() => {
       if (editingIndex === null) return;
-      const normalized = normalizeRowForSave(draftRow);
       saveEdit();
-    }, [editingIndex, draftRow, normalizeRowForSave, saveEdit]);
+    }, [editingIndex, draftRow, saveEdit]);
 
     const handleCancelEdit = useCallback(() => {
       cancelEdit();
@@ -170,6 +170,9 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
       if(col.field === "lamarina") {
         return {...col, ...lamarinColumn};
       }
+      if(col.field === "netamnt") {
+        return {...col, ...{component: PriceCell}};
+      }
       return col;
     });
 
@@ -225,10 +228,10 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
                   {encodedColumnSchemas.map((col) => (
                       <Cell
                       readOnly={editingIndex !== rowIndex}
-                        selectedValues={newRow}
+                        selectedValues={editingIndex === rowIndex ? draftRow : row}
                         key={col.columnId}
                         column={col as any}
-                        value={newRow[col.field]}
+                        value={editingIndex === rowIndex ? draftRow[col.field] : row[col.field]}
                         onChange={handleEditInputChange}
                       />
                     ))}
@@ -300,6 +303,14 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
                       onClick={handleSave}
                     >
                       <Save className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50"
+                      aria-label="Ακύρωση"
+                      onClick={cancelEdit}
+                    >
+                      <X className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>

@@ -1,5 +1,5 @@
 import { companySettings } from "@/config"
-import { IGetItemPayload } from "@/api/types"
+import { IGetItemPayload, IGetPricePayload } from "@/api/types"
 import { getItems } from "@/api/fetch"
 import { bOption } from "./utils"
 export const fetchColorCompanies = async () => {
@@ -46,5 +46,17 @@ export const fetchColorsByManufacturer = async (payloadParams: any) => {
     LastId: payloadParams.colorType,
   }
   const response = await getItems(payload)
+  return response
+}
+// GetPrice
+// Get with {Company: 20, BOption: 80, id: 480, LastId:10104, JToken:{"QTY":1, "UTBL03":1, "gemisi":1,"lamarina":2}} id = trdr, LastId = mtrl -- Return {"mtrl":480,"price":456,4053}
+
+export const fetchColorPrice = async (payloadParams: any) => {
+
+  const payload: IGetPricePayload = {
+    Company: companySettings.company,
+    BOption: bOption.getPrice,
+  }
+  const response = await getItems({...payload, ...payloadParams})
   return response
 }

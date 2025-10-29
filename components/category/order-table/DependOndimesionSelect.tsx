@@ -10,7 +10,6 @@ interface DependOndimesionSelectProps {
 
 export default function DependOndimesionSelect({ onSelectionChange, options, selectedValues, field }: DependOndimesionSelectProps) {
 
-    console.log(selectedValues, "selectedValues");
 
     const [optionList, setOptionList] = useState<any[]>([]);
     const [selectedValue, setSelectedValue] = useState<string>("");
@@ -20,9 +19,6 @@ export default function DependOndimesionSelect({ onSelectionChange, options, sel
         const selectedOption = optionList.find((option: any) => option.id === value);
         onSelectionChange(selectedOption);
     }
-
-   
-
 
     const handleSetOptionList = () => {
         if (!selectedValues?.dimension) {

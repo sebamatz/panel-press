@@ -2,7 +2,7 @@ export interface ColorSelectionItem {
   selectedTrdpgroup: number | null;
   manifacturer?: ColorManufacturer[];
   colorType: string;
-  colorManufacturerValue?: {
+  colorManifacturerValue?: {
     ccCPOUDRAID: string;
     sky: string;
   };

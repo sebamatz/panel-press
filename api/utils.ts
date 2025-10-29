@@ -9,6 +9,7 @@ export enum bOption {
   getColorTypes = 30,
   getColorManufacturers = 40,
   getColors = 50,
+  getPrice = 80,
 }
 
 // Helper function to process categories response
