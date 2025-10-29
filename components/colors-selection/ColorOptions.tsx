@@ -1,16 +1,38 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { profilColorsType } from "./OrderOptions";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 
 
 export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
-  const { profilColors, setProfilColors, setPrimarySelectedTrdpgroup, setPrimaryColorValue ,setColorSelectionState} = useColorSelectionStore();
+  const { profilColors, setProfilColors,setColorSelectionState} = useColorSelectionStore();
 
   const handleProfilColors = (value: string) => {
-    setColorSelectionState(null);
+    if (value === profilColorsType.WHITE) {
+      const newState = [
+        {
+          colorValue: profilColorsType.WHITE,
+          colorManufacturerValue: { ccCPOUDRAID: "", sky: "" },
+          selectedTrdpgroup: null,
+          manifacturer: [],
+          colorType: "",
+          selectedColorCompany: null,
+          selectedManifacturer: "",
+          colorData: [],
+        },
+      ];
+      setColorSelectionState(newState);
+    } else {
+      setColorSelectionState([]);
+    }
     setProfilColors(value);
   };
+  
+
+  useEffect(() => {
+    handleProfilColors(profilColorsType.WHITE);
+  }, []);
 
 
   return <div className="space-y-4">
@@ -20,7 +42,7 @@ export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
     onValueChange={handleProfilColors}
     className="flex flex-row space-x-6"
   >
-    <div className="flex items-center space-x-2">
+    {/* <div className="flex items-center space-x-2">
       <RadioGroupItem 
         value={profilColorsType.BLANK} 
         id="blank" 
@@ -29,7 +51,7 @@ export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
       <Label htmlFor="blank" className="text-sm font-normal">
         Άβαφο
       </Label>
-    </div>
+    </div> */}
     <div className="flex items-center space-x-2">
       <RadioGroupItem 
         value={profilColorsType.WHITE} 

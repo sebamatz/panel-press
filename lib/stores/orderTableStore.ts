@@ -38,7 +38,7 @@ interface OrderTableState {
   setNewRow: (data: OrderRow) => void
   updateNewRowField: (field: string, value: any) => void
   updateDraftRowField: (field: string, value: any) => void
-  
+  updateAllRowsField: (field: string, value: any) => void
   // Edit actions
   saveEdit: () => void
   cancelEdit: () => void
@@ -97,11 +97,10 @@ export const useOrderTableStore = create<OrderTableState>()(
           newRow: { ...state.newRow, [field]: value }
         }))
       },
-      
-      updateDraftRowField: (field, value) => {
+      updateAllRowsField: (field: string, value: any) => {
         set((state) => ({
-          draftRow: { ...state.draftRow, [field]: value }
-        }))
+          orders: state.orders.map((order) => ({ ...order, [field]: value }))
+        }));
       },
 
       // Edit actions

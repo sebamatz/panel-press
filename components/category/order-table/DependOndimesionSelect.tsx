@@ -29,7 +29,7 @@ export default function DependOndimesionSelect({ onSelectionChange, options, sel
             return [];
         }
         const optionList = options.find((option: any) => option.UTBL03.toString() === selectedValues.dimension.toString());
-        setOptionList(optionList[field]);
+        setOptionList(optionList?.[field]);
     }
     useEffect(() => {
         handleSetOptionList();
@@ -49,7 +49,7 @@ export default function DependOndimesionSelect({ onSelectionChange, options, sel
                 <SelectValue placeholder="Select..." />
             </SelectTrigger>
             <SelectContent>
-                {optionList.map((option: any, index: number) => (
+                { optionList && optionList.map((option: any, index: number) => (
                     <SelectItem key={index} value={option.id}>
                         {option.name}
                     </SelectItem>

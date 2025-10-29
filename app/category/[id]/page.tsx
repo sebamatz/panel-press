@@ -95,7 +95,7 @@ export default function CategoryDetailsPage() {
               <div className="w-full">
                 <OrderOptions isDisabled={false} />
               </div>
-              {columnSchemas && columnSchemas.length > 0 && <OrderTable columns={columnSchemas || []} />}
+              {columnSchemas && columnSchemas.length > 0 && <OrderTable />}
             </>
           )}
 

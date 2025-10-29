@@ -1,8 +1,8 @@
 import { bOption } from "@/api/utils";
 import {  domain } from "@/config";
 import { companySettings } from "@/config"
+import { putOrderMock } from "./mocks";
 
-import { getBaseCategoriesRequestParams } from "@/api/types";
 const groupBy = (keys: any) => (array: any) =>
   array.reduce((objectsByKeyValue: any, obj: any) => {
     const value = keys.map((key: any) => obj[key]).join("-");
@@ -14,7 +14,7 @@ const groupBy = (keys: any) => (array: any) =>
     return objectsByKeyValue;
   }, {});
 
-const constructApi = (url, params) => {
+const constructApi = (url: string, params: any) => {
   const queryString = encodeURIComponent(JSON.stringify(params));
   return url + queryString;
 };
@@ -31,15 +31,6 @@ export async function getData(url = "", params: any = {}, short = false) {
   return short ? groupFincodeStatus(data) : data;
 }
 
-// returs client orders
-export const fechOrders = async (data) => {
-  const result = await getData(
-    `${domain}/erpapi/getorders/obj?pars=`,
-    data,
-    true
-  );
-  return result;
-};
 
 export const fechGroups = async () => {
   const data = {
@@ -74,45 +65,9 @@ export const getbranches = async (afm: string) => {
   console.log("getbranches", result);
   return result;
 };
-//put order
-const defaults = [
-  {
-    Company: companySettings.company,
-    bOption: 0,
-    trdr: 3975,
-    trdbranch: 125,
-    comments: "test1",
-    mtrl: 10069,
-    commentS1: "test1",
-    qtY1: 0,
-    qtY2: 0,
-  },
-  {
-    Company: companySettings.company,
-    bOption: 0,
-    trdr: 3975,
-    trdbranch: 125,
-    comments: "test2",
-    mtrl: 10069,
-    commentS1: "test2",
-    qtY1: 0,
-    qtY2: 0,
-  },
-  {
-    Company: companySettings.company,
-    bOption: 0,
-    trdr: 3975,
-    trdbranch: 125,
-    comments: "test3",
-    mtrl: 10069,
-    commentS1: "test13",
-    qtY1: 0,
-    qtY2: 0,
-  },
-];
 
 // Example POST method implementation:
-export async function postData(url = "", data = defaults) {
+export async function postData(url = "", data = putOrderMock) {
   // Default options are marked with *
   const response = await fetch(url, {
     method: "PUT", // *GET, POST, PUT, DELETE, etc.
@@ -201,7 +156,12 @@ export const getItems = async (payload: IGetItemPayload) => {
     ...payload,
   };
   const url = `${domain}/erpapi/getitems/obj?pars=`;
+  try {
   const response = await fetch(constructApi(url, params));
-  const data = await response.json();
-  return data;
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching items:', error);
+    throw error;
+  }
 };

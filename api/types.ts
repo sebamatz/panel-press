@@ -89,7 +89,7 @@ export interface ProductDetails {
 
 export interface ColumnSchema {
   baseCategory: number;
-  colType: string;
+  colType: "string"|"number"|"boolean"|"dateTime"|"text"|"select"|"multiselect";
   columnId: number;
   editable: boolean;
   field: string;
@@ -97,5 +97,6 @@ export interface ColumnSchema {
   series: number;
   title: string;
   values: any;
+  component?: React.ComponentType<any>;
   [key: string]: any;
 }
