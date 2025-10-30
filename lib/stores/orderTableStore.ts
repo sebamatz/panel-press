@@ -118,10 +118,20 @@ export const useOrderTableStore = create<OrderTableState>()(
       },
 
       cancelEdit: () => {
-        set({
-          editingIndex: null,
-          draftRow: {}
-        })
+        const state = get();
+        if (state.isAdding) {
+          set({
+            isAdding: false,
+            newRow: {},
+            editingIndex: null,
+            draftRow: {}
+          });
+        } else {
+          set({
+            editingIndex: null,
+            draftRow: {}
+          });
+        }
       },
 
       // API actions
