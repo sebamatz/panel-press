@@ -31,6 +31,7 @@ export interface IGetItemPayload {
   commentS1?: any;
   qtY1?: any;
   qtY2?: any;
+  JToken?: any;
 }
 
 
@@ -44,6 +45,11 @@ export interface IGetPricePayload {
 
 
 export interface IGetPriceJToken {
+  TRDR: number;
+  Category: number;
+  Series: any;
+  SKU: string;
+  Color: number;
   QTY: number;
   UTBL03: number;
   gemisi: number;

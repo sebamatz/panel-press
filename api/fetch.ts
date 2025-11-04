@@ -21,6 +21,9 @@ const constructApi = (url: string, params: any) => {
 
 export async function getData(url = "", params: any = {}, short = false) {
   const response = await fetch(constructApi(url, params));
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
   const data = await response.json(); // parses JSON response into native JavaScript objects
   const groupFincodeStatus = groupBy([
     "trndate",
@@ -77,6 +80,11 @@ export async function postData(url = "", data = putOrderMock) {
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
 
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+  }
+
   return { response, data: await response.json() }; // parses JSON response into native JavaScript objects
 }
 
@@ -86,7 +94,7 @@ export async function postData(url = "", data = putOrderMock) {
 // Submit orders to backend
 export async function submitOrders(orders: any[]) {
   try {
-    const response = await postData('/erpapi/putorder', orders)
+    const response = await postData(`${domain}/erpapi/putorder`, orders)
     return response
   } catch (error) {
     console.error('Error submitting orders:', error)
@@ -103,6 +111,9 @@ export async function downloadPdf(payload: any, code) {
         "Content-Type": "application/json",
       },
     });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const pdf = await response.json();
     const linkSource = `data:application/pdf;base64,${pdf}`;
     const downloadLink = document.createElement("a");
@@ -157,7 +168,10 @@ export const getItems = async (payload: IGetItemPayload) => {
   };
   const url = `${domain}/erpapi/getitems/obj?pars=`;
   try {
-  const response = await fetch(constructApi(url, params));
+    const response = await fetch(constructApi(url, params));
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
     const data = await response.json();
     return data;
   } catch (error) {

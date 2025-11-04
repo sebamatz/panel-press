@@ -56,6 +56,7 @@ export const useApiStore = create<ApiState>()(
         const details = processCategoryDetailsResponse(data, categoryId);
         set((state) => ({
           categoryDetails: { ...state.categoryDetails, [categoryId]: details },
+          selectedbaseCategory: categoryId,
           categoryDetailsLoading: {
             ...state.categoryDetailsLoading,
             [categoryId]: false,

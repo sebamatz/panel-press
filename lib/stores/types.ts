@@ -130,6 +130,7 @@ export interface ApiState {
     categoryDetails: Record<string | number, CategoryDetails>;
     categoryDetailsLoading: Record<string | number, boolean>;
     categoryDetailsError: Record<string | number, string | null>;
+    selectedbaseCategory: string | number | null;
     selectedCategoryDetails: string | number | null;
     setSelectedCategoryDetails: (
       selectedCategoryDetails: string | number | null

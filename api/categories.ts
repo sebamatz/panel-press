@@ -16,7 +16,7 @@ export const fetchCategoryDetails = async (categoryId: string | number) => {
   const payload: IGetItemPayload = {
     Company: companySettings.company,
     BOption: bOption.getBaseCategories as number,
-    id: categoryId.toString(),
+    JToken:{"Category":categoryId.toString()}
   };
   const response = await getItems(payload);
   return response;
@@ -44,14 +44,13 @@ export const fetchCategoriesProductColumns = async (baseCategory: string | numbe
     }
   };
 
-
+ // {Company: 20, BOption: 70, SearchValue:"P-80", JToken:{"Category":1, "Series":1, "Color":1}}
 export const fetchCategoryProducts = async (baseCategory: string | number, lastId: string | number, searchValue: string) => {
   const payload: IGetItemPayload = {
     Company: companySettings.company,
     BOption: bOption.getBaseCategories,
-    id: baseCategory.toString(),
-    LastId: lastId.toString(),
     SearchValue: searchValue,
+    JToken:{"Category":baseCategory.toString(), "Series":lastId.toString(), "Color":1}
   };
   const response = await getItems(payload);
   return response;
