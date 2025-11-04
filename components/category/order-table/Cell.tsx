@@ -2,6 +2,7 @@ import React from "react";
 import DependOndimesionSelect from "./DependOndimesionSelect";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import { ColumnSchema } from "@/api/types";
+import Image from "next/image";
 
 function ReadableCell({ value, column }: { value: any; column: ColumnSchema }) {
   console.log("value", value);
@@ -9,7 +10,15 @@ function ReadableCell({ value, column }: { value: any; column: ColumnSchema }) {
   if (typeof value === "object") {
     return (
       <td className="border border-gray-300 p-2">
-        <span>{value.name}</span>
+        <div className="flex items-center gap-2">
+          <div>
+        <div>{value.name}</div><br />
+        <div>{value?.webName}</div>
+        </div>
+        {value.imgUrl && (
+          <Image src={value.imgUrl} alt={value.name} width={50} height={50} className="rounded-md" />
+        )}
+        </div>
       </td>
     );
   }

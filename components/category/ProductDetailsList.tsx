@@ -8,7 +8,7 @@ import { useParams } from "next/navigation"
 import { fetchCategoryProducts } from "@/api/categories"
 import { profilColorsType } from "../colors-selection/OrderOptions"
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore"
-
+import Image from "next/image"
 interface ProductDetailsPanelProps {
   onSelectionChange?: (selectedItem: any) => void
   enabled?: boolean
@@ -86,6 +86,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
           </CardContent>
         </Card>
       )}
+      <div className="flex gap-4">
           <Combobox
             placeholder={selectedCategoryDetails ? "Επιλέξτε Προϊόντα" : "Επιλέξτε σειρά πρώτα"}
             value={selectedItem}
@@ -97,6 +98,11 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
             searchPlaceholder="Αναζήτηση κωδικών..."
             emptyMessage={selectedCategoryDetails ? "Δεν βρέθηκαν αποτελέσματα" : "Πρέπει να επιλέξετε σειρά"}
           />
+          {selectedItem && (
+            <Image src={selectedItem.imgUrl} alt={selectedItem.name} width={50} height={50} className="rounded-md" />  
+          )}
+          </div>
+
     </div>
   )
 }
