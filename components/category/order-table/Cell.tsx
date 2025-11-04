@@ -3,7 +3,9 @@ import DependOndimesionSelect from "./DependOndimesionSelect";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import { ColumnSchema } from "@/api/types";
 
-function ReadableCell({ value }: { value: any; column: ColumnSchema }) {
+function ReadableCell({ value, column }: { value: any; column: ColumnSchema }) {
+  console.log("value", value);
+  console.log("column", column);
   if (typeof value === "object") {
     return (
       <td className="border border-gray-300 p-2">
@@ -28,6 +30,7 @@ export interface ICellComponentProps {
   field: string;  
   onSelectionChange?: (field: string, value: any) => void;
   options?: any;
+  values?: any;
 }
 
 export default function Cell({
@@ -42,6 +45,7 @@ export default function Cell({
   value: any;
   onChange?: (field: string, value: any) => void;
   readOnly: boolean;
+  values: any;
 }) {
 
   // If the column is locked and has a component, render the component
@@ -50,6 +54,7 @@ export default function Cell({
     return (
       <td className="border border-gray-300 p-2">
         <Component
+          values={column.values}
           readOnly={readOnly}
           field={column.field}
           value={value}
@@ -81,6 +86,7 @@ export default function Cell({
           onSelectionChange={(v: any) => onChange && onChange(column.field, v)}
           selectedValues={selectedValues}
           options={column.values}
+          column={column}
         />
       </td>
     );

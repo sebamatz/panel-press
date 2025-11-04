@@ -8,6 +8,7 @@
   import { useOrderTableStore } from "@/lib/stores/orderTableStore";
   import { toast } from "sonner";
   import ColorCell from "./ColorCell";
+  import DimensionCell from "./DimensionCell";
   import { normalizeRowForSave, parseValues } from "./utils";
   import { ColumnSchema } from "@/api/types";
 
@@ -77,7 +78,11 @@ import PriceCell from "./PriceCell";
 
     const handleSave = () => {
       if(newRow.product == null){
-        toast.error("Please select a product");
+        toast.error("Παρακαλώ επιλέξτε προϊόν");
+        return;
+      }
+      if(!newRow.qty1){
+        toast.error("Παρακαλώ επιλέξτε ποσότητα");
         return;
       }
       // const normalized = normalizeRowForSave(newRow);
@@ -130,6 +135,10 @@ import PriceCell from "./PriceCell";
       component: ColorCell,
       locked: true,
     }), []);
+    const dimensionColumn = useMemo(() => ({
+      options: columnSchemas?.find((col) => col.field === "dimension")?.values,
+      component: DimensionCell,
+    }), []);
 
     const gemisiColumn = useMemo(() => ({
       options: columnSchemas?.find((col) => col.field === "gemisi")?.values,
@@ -161,6 +170,9 @@ import PriceCell from "./PriceCell";
     const encodedColumnSchemasWithoutId = columns.filter((col) => !excludedColumns.includes(col.field));
 
     const updatedColumns = encodedColumnSchemasWithoutId.map((col) => {
+      if(col.field === "dimension") {
+        return {...col, ...dimensionColumn};
+      }
       if(col.field === "color") {
         return {...col, ...colorColumn};
       }

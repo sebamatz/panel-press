@@ -24,7 +24,7 @@ export default function DependOndimesionSelect({ onSelectionChange, options, sel
         if (!selectedValues?.dimension) {
             return [];
         }
-        const optionList = options.find((option: any) => option.UTBL03.toString() === selectedValues.dimension.toString());
+        const optionList = options.find((option: any) => option.UTBL03.toString() === selectedValues.dimension.UTBL03.toString());
         setOptionList(optionList?.[field]);
     }
     useEffect(() => {

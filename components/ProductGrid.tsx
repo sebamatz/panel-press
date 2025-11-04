@@ -3,7 +3,7 @@
 import { CardTitle } from "@/components/ui/card"
 
 import { CardHeader } from "@/components/ui/card"
-
+import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
 import { Shield, Home, Lock, Flame, Layers, Fence, Package, Loader2 } from "lucide-react"
@@ -129,6 +129,7 @@ export function DynamicProductGrid() {
                   className={`w-12 h-12 md:w-16 md:h-16 ${color} rounded-lg flex items-center justify-center mx-auto mb-3 md:mb-4`}
                 >
                   <IconComponent className="h-6 w-6 md:h-8 md:w-8 text-white" />
+                  <Image src={category.imgUrl} alt={category.name} width={180} height={180} className="object-cover" /> 
                 </div>
                 <h3 className="font-bold text-base md:text-lg mb-2">{category.name}</h3>
                 {category.description && (

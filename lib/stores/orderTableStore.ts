@@ -197,24 +197,3 @@ export const useOrderTableStore = create<OrderTableState>()(
   )
 )
 
-// Helper function to normalize row data for saving
-function normalizeRowForSave(row: OrderRow): OrderRow {
-  const normalized: OrderRow = { ...row }
-  
-  Object.keys(normalized).forEach((key) => {
-    const fieldLower = key.toString().toLowerCase()
-    const value = normalized[key]
-    
-    if ((fieldLower === "gemisi" || fieldLower === "lamarina") && value != null) {
-      if (Array.isArray(value)) {
-        normalized[key] = value.map((v) => 
-          (v && typeof v === "object" && v.id != null) ? v.id : v
-        )
-      } else if (typeof value === "object") {
-        normalized[key] = value.name != null ? value.name : value
-      }
-    }
-  })
-  
-  return normalized
-}
