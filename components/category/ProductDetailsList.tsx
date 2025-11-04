@@ -6,6 +6,8 @@ import { useState } from "react"
 import { Combobox } from "../ui/combobox"
 import { useParams } from "next/navigation"
 import { fetchCategoryProducts } from "@/api/categories"
+import { profilColorsType } from "../colors-selection/OrderOptions"
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore"
 
 interface ProductDetailsPanelProps {
   onSelectionChange?: (selectedItem: any) => void
@@ -15,6 +17,7 @@ interface ProductDetailsPanelProps {
 export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps) {
   const params = useParams()
   const { selectedCategoryDetails } = useApiStore()
+  const {profilColors, colorSelectionState} = useColorSelectionStore();
   const categoryId: any = params.id
 
   const [selectedItem, setSelectedItem] = useState<any>(null)
@@ -27,6 +30,19 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
     setSelectedItem(item)
   }
 
+  const getColor= () => {
+
+
+    if(colorSelectionState.length > 0){
+      return colorSelectionState[0].colorType;
+    }
+
+    if(profilColors === profilColorsType.WHITE){
+      return 4;
+    }
+    return null;
+  }
+
   const handleSearch = async (value: string) => {
     try {
       setError(null)
@@ -35,7 +51,8 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
       const data = await fetchCategoryProducts(
         categoryId as string | number,
         selectedCategoryDetails as string | number,
-        value || ""
+        value || "",
+        getColor()
       )
       setItems(Array.isArray(data) ? data : [])
     } catch (e: any) {

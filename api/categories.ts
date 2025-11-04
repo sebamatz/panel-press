@@ -45,12 +45,12 @@ export const fetchCategoriesProductColumns = async (baseCategory: string | numbe
   };
 
  // {Company: 20, BOption: 70, SearchValue:"P-80", JToken:{"Category":1, "Series":1, "Color":1}}
-export const fetchCategoryProducts = async (baseCategory: string | number, lastId: string | number, searchValue: string) => {
+export const fetchCategoryProducts = async (baseCategory: string | number, lastId: string | number, searchValue: string, color: any) => {
   const payload: IGetItemPayload = {
     Company: companySettings.company,
     BOption: bOption.getBaseCategories,
     SearchValue: searchValue,
-    JToken:{"Category":baseCategory.toString(), "Series":lastId.toString(), "Color":1}
+    JToken:{"Category":baseCategory.toString(), "Series":lastId.toString(), "Color":color ? color : null}
   };
   const response = await getItems(payload);
   return response;

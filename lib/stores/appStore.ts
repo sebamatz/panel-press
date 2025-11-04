@@ -1,4 +1,4 @@
-  import { fetchBaseCategories, fetchCategoriesProductColumns, fetchCategoryProducts } from "@/api/categories";
+  import { fetchBaseCategories, fetchCategoriesProductColumns } from "@/api/categories";
   import { fetchCategoryDetails } from "@/api/categories";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
