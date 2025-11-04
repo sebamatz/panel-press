@@ -2,7 +2,7 @@ import { useState } from "react"
 import { ComboboxItem, Combobox } from "@/components/ui/combobox"
 import { useApiStore } from "@/lib/stores/appStore"
 import { Package } from "lucide-react"
-
+import Image from "next/image"
 interface CategoryProductSelectorProps {
   products: ComboboxItem[]
   categoryId: string | number
@@ -28,7 +28,7 @@ export function CategoryProductList({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 flex gap-4">
        <Combobox
         items={products}
         icon={<Package className="h-5 w-5" />}
@@ -44,6 +44,9 @@ export function CategoryProductList({
         value={selectedItem}
         onValueChange={handleProductSelect}
       />
+      {selectedItem && (
+        <Image src={selectedItem.imgUrl} alt={selectedItem.name} width={100} height={100} /> 
+      )}
     </div>
   )
 } 

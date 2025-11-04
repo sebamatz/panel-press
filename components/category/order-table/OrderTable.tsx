@@ -124,7 +124,7 @@ import PriceCell from "./PriceCell";
     const productColumn = useMemo(() => ({
       columnId: 123 - 23,
       field: "product",
-      title: "Product",
+      title: "ΠΡΟΪΟΝ",
       colType: "string",
       values: null,
       component: ProductCellComponent,

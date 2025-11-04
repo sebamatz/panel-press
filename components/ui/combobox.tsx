@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { Check, ChevronsUpDown, Package } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -77,6 +78,7 @@ export function Combobox({
   const [open, setOpen] = React.useState(false)
 
   const handleSelect = (currentValue: string) => {
+    debugger;
     const selected = items.find((item) => item.name === currentValue)
     onValueChange?.(selected || null)
     setOpen(false)
@@ -92,6 +94,11 @@ export function Combobox({
               <h3 className="font-medium text-gray-900 text-sm md:text-base">
                 {item.name}
               </h3>
+              {item.webName && (
+                <p className="text-xs text-gray-500 mt-1">
+                  {item.webName}
+                </p>
+              )}
               {item.description && (
                 <p className="text-xs text-gray-500 mt-1">
                   {item.description}
@@ -113,6 +120,9 @@ export function Combobox({
               )}
             />
           </div>
+          {item.imgUrl && (
+            <Image src={item.imgUrl} alt={item.name} width={40} height={40} className="rounded-md" />
+          )}
         </div>
       </CardContent>
     </Card>

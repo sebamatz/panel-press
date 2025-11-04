@@ -69,6 +69,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
     sku: item?.SKU ?? item?.sku ?? String(item?.id ?? ""),
     webName: item?.WebName ?? item?.webName ?? String(item?.id ?? ""),
     xdocname: item?.XDOCNAME ?? item?.xdocname ?? String(item?.id ?? ""),
+    imgUrl: item?.imgUrl ?? item?.ImgUrl ?? String(item?.id ?? ""),
   }))
 
   return (
