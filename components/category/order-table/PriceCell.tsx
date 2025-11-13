@@ -14,36 +14,40 @@ console.log("selectedValues PriceCell", selectedValues);
 const {selectedCategoryDetails,selectedbaseCategory} = useApiStore();
 const {profilColors} = useColorSelectionStore();
 
+console.log("profilColors", profilColors);
+
     const [price, setPrice] = useState<number | null>(null);
 //https://www.alfaeorders.com:19443/erpapi/getitems/obj?pars=%7BCompany%3A%2020%2C%20BOption%3A%2080%2C%20id%3A%20480%2C%20LastId%3A10104%2C%20JToken%3A%7B%22QTY%22%3A1%2C%20%22UTBL03%22%3A1%2C%20%22gemisi%22%3A1%2C%22lamarina%22%3A2%7D%7D
 //{Company: 20, BOption: 80, JToken:{"TRDR":480, "Category":1, "Series":1, "SKU": "P-80", "Color":1, "QTY":1, "UTBL03":1, "gemisi":1,"lamarina":2}}
     const handleGetPrice = async () => {
 
+        console.log("selectedValues", selectedValues);
+
         const JToken: IGetPriceJToken = {
             TRDR: 480,
             Category: selectedbaseCategory,
-            Series: selectedCategoryDetails,
+            Series: selectedCategoryDetails?.id,
             SKU: selectedValues.product?.sku || "",
-            Color: profilColors === profilColorsType.WHITE ? 1 : 2,
+            Color: profilColors === profilColorsType.WHITE ? 4 : 2,
             QTY: selectedValues.qty1,
-            UTBL03: selectedValues.dimension,
+            UTBL03: selectedValues.dimension.UTBL03,
             gemisi: selectedValues.gemisi?.id || 0,
             lamarina: selectedValues.lamarina?.id || 0
-        }
-
+        };
         const payload: IGetPricePayload = {
             JToken:JToken,
         }
         const response = await fetchColorPrice(payload);
-        
+        console.log("response", response);
         setPrice(response.price);
+
         onChange && onChange("netamnt", response.price);
     }
     
     useEffect(() => {
-        if(selectedValues.qty1 && selectedValues.product && selectedValues.dimension && selectedValues.gemisi && selectedValues.lamarina){
+        if(selectedValues.qty1 && selectedValues.dimension && selectedValues.gemisi && selectedValues.lamarina){
             handleGetPrice();
         }
-    }, [selectedValues.qty1, selectedValues.product, selectedValues.dimension, selectedValues.gemisi, selectedValues.lamarina]);
+    }, [selectedValues.qty1, selectedValues.dimension, selectedValues.gemisi, selectedValues.lamarina]);
     return <span>{price}</span>
 }

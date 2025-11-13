@@ -78,7 +78,6 @@ export function Combobox({
   const [open, setOpen] = React.useState(false)
 
   const handleSelect = (currentValue: string) => {
-    debugger;
     const selected = items.find((item) => item.name === currentValue)
     onValueChange?.(selected || null)
     setOpen(false)

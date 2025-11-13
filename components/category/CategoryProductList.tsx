@@ -22,7 +22,7 @@ export function CategoryProductList({
     
     // Fetch column schema when a category is selected
     if (item?.id) {
-      setSelectedCategoryDetails(item.id)
+      setSelectedCategoryDetails(item)
       fetchColumnSchema(categoryId, item.id)
     }
   }
@@ -44,7 +44,7 @@ export function CategoryProductList({
         value={selectedItem}
         onValueChange={handleProductSelect}
       />
-      {selectedItem && (
+      {selectedItem && selectedItem.imgUrl && (
         <Image src={selectedItem.imgUrl} alt={selectedItem.name} width={100} height={100} /> 
       )}
     </div>

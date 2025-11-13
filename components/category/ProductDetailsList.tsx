@@ -1,6 +1,6 @@
 import { useApiStore } from "@/lib/api"
 import { Card, CardContent } from "@/components/ui/card"
-import { Package, AlertCircle } from "lucide-react"
+import { Package, AlertCircle, ZoomIn } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useState } from "react"
 import { Combobox } from "../ui/combobox"
@@ -9,6 +9,12 @@ import { fetchCategoryProducts } from "@/api/categories"
 import { profilColorsType } from "../colors-selection/OrderOptions"
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore"
 import Image from "next/image"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 interface ProductDetailsPanelProps {
   onSelectionChange?: (selectedItem: any) => void
   enabled?: boolean
@@ -24,6 +30,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
   const [items, setItems] = useState<any[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false)
 
   const handleSelectionChange = (item: any) => {
     onSelectionChange?.(item)
@@ -86,6 +93,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
           </CardContent>
         </Card>
       )}
+      <div className="flex flex-col gap-2">
       <div className="flex gap-4">
           <Combobox
             placeholder={selectedCategoryDetails ? "Επιλέξτε Προϊόντα" : "Επιλέξτε σειρά πρώτα"}
@@ -99,9 +107,45 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
             emptyMessage={selectedCategoryDetails ? "Δεν βρέθηκαν αποτελέσματα" : "Πρέπει να επιλέξετε σειρά"}
           />
           {selectedItem && (
-            <Image src={selectedItem.imgUrl} alt={selectedItem.name} width={50} height={50} className="rounded-md" />  
+            <div className="relative group cursor-pointer" onClick={() => setIsImageDialogOpen(true)}>
+              <div className="relative min-w-10">
+                <Image 
+                  src={selectedItem.imgUrl} 
+                  alt={selectedItem.name} 
+                  width={50} 
+                  height={50} 
+                  className="rounded-md transition-transform duration-200 group-hover:scale-105" 
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-md transition-colors duration-200 flex items-center justify-center">
+                  <ZoomIn className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                </div>
+              </div>
+            </div>
           )}
           </div>
+          <div>{selectedItem?.webName}</div>
+          <div>{selectedItem?.dimDesign}</div>
+          </div>
+          
+          {selectedItem && (
+            <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+              <DialogContent className="max-w-4xl w-full p-0">
+                <DialogHeader className="p-6 pb-4">
+                  <DialogTitle>{selectedItem.name || selectedItem.webName || "Product Image"}{selectedItem?.dimDesign??""}{selectedItem?.webName??""}</DialogTitle>
+                </DialogHeader>
+                <div className="relative w-full h-[70vh] flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-6">
+                  <Image
+                    src={selectedItem.imgUrl}
+                    alt={selectedItem.name || selectedItem.webName || "Product Image"}
+                    width={800}
+                    height={800}
+                    className="max-w-full max-h-full object-contain rounded-md"
+                    unoptimized
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
 
     </div>
   )

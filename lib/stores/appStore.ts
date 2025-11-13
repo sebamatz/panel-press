@@ -83,7 +83,7 @@ export const useApiStore = create<ApiState>()(
 
         const parsedData = data.map((item: any) => ({
           ...item,
-          values: item.values ? JSON.parse(item.values) : "",
+          values: item.values ? item.values : "",
         }));
         set((state) => ({
           columnSchemas: parsedData,

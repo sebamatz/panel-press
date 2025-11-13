@@ -131,9 +131,9 @@ export interface ApiState {
     categoryDetailsLoading: Record<string | number, boolean>;
     categoryDetailsError: Record<string | number, string | null>;
     selectedbaseCategory: string | number | null;
-    selectedCategoryDetails: string | number | null;
+    selectedCategoryDetails: CategoryDetails | null;
     setSelectedCategoryDetails: (
-      selectedCategoryDetails: string | number | null
+      selectedCategoryDetails: CategoryDetails | null
     ) => void;
     // Product details state
     productDetails: Record<string, ProductDetails>;
