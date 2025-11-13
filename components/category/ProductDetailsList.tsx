@@ -57,7 +57,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
       setItems([])
       const data = await fetchCategoryProducts(
         categoryId as string | number,
-        selectedCategoryDetails as string | number,
+        selectedCategoryDetails?.id as string | number,
         value || "",
         getColor()
       )
