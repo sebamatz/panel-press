@@ -77,6 +77,7 @@ export function ProductDetailsList({onSelectionChange}: ProductDetailsPanelProps
     webName: item?.WebName ?? item?.webName ?? String(item?.id ?? ""),
     xdocname: item?.XDOCNAME ?? item?.xdocname ?? String(item?.id ?? ""),
     imgUrl: item?.imgUrl ?? item?.ImgUrl ?? String(item?.id ?? ""),
+    dimDesign: item?.dimDesign ?? item?.DimDesign ?? String(item?.id ?? ""),
   }))
 
   return (
