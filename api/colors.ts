@@ -11,7 +11,7 @@ export const fetchColorCompanies = async () => {
   return response
 }
 
-export const fetchColorTypes = async () => {
+export const fetchColorTypes = async (ColorChoice: string) => {
   interface response {
     id: number;
     name: string;
@@ -19,6 +19,7 @@ export const fetchColorTypes = async () => {
   const payload: IGetItemPayload = {
     Company: companySettings.company,
     BOption: bOption.getColorTypes,
+    JToken: {ColorChoice: ColorChoice}
   }
   const response: response[] = await getItems(payload)
   return response

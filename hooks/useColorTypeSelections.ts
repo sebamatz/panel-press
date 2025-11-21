@@ -1,27 +1,31 @@
-import { useCallback, useEffect } from "react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import { useCallback, useEffect, useRef } from "react";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-import ColorCodeInput from "./ColorCodeInput";
-import ColorManufacturer from "./ColorManufacturer";
-import ManifacturerColors from "./ManifacturerColors";
-import { fetchColorManufacturers, fetchColorsByManufacturer, fetchColorTypes } from "@/api/colors";
+import {
+  fetchColorManufacturers,
+  fetchColorsByManufacturer,
+  fetchColorTypes,
+} from "@/api/colors";
 
-export default function ColorSelections({ isSecondary = false }) {
+interface UseColorTypeSelectionsProps {
+  isSecondary?: boolean;
+}
+
+export function useColorTypeSelections({
+  isSecondary = false,
+}: UseColorTypeSelectionsProps = {}) {
   const {
-    colorTypes,
     setColorTypes,
     colorSelectionState,
     setColorSelectionState,
   } = useColorSelectionStore();
 
+  const profilColors = useColorSelectionStore((state) => state.profilColors);
+  const colorTypes = useColorSelectionStore((state) => state.colorTypes);
+
   const index = isSecondary ? 1 : 0;
+  const lastFetchedProfilColors = useRef<string>("");
+
+  const currentState = colorSelectionState[index];
 
   const handleChangeColorType = useCallback(
     (value: string) => {
@@ -57,7 +61,6 @@ export default function ColorSelections({ isSecondary = false }) {
     setColorSelectionState(newState);
   }, [colorSelectionState, setColorSelectionState, index]);
 
-
   const getManifacturers = useCallback(async () => {
     const manufacturers = await fetchColorManufacturers();
     const current = colorSelectionState[index];
@@ -69,25 +72,35 @@ export default function ColorSelections({ isSecondary = false }) {
     setColorSelectionState(newState);
   }, [colorSelectionState, setColorSelectionState, index]);
 
-  const getColortypes = useCallback(async () => {
-    const colortypes = await fetchColorTypes();
-    // Store available color types globally in the store
-    setColorTypes(colortypes);
-  }, [setColorTypes]);
-
+  // Fetch colors when manufacturer and color type are selected
   useEffect(() => {
     const current = colorSelectionState[index];
     if (current?.selectedManifacturer && current?.colorType !== "3") {
       handleGetColor();
     }
-  }, [index, colorSelectionState[index]?.selectedManifacturer, colorSelectionState[index]?.colorType, handleGetColor]);
+  }, [
+    index,
+    colorSelectionState[index]?.selectedManifacturer,
+    colorSelectionState[index]?.colorType,
+    handleGetColor,
+  ]);
 
-  // Initialize color types on component mount
+  // Fetch color types when profilColors changes (only from primary instance)
   useEffect(() => {
-    if (!colorTypes || colorTypes.length === 0) {
-      getColortypes();
-    }
-  }, [getColortypes, colorTypes]);
+    // Only fetch color types once from the primary instance to avoid duplicate API calls
+    if (isSecondary || !profilColors) return;
+
+    // Skip if we've already fetched for this profilColors value
+    if (lastFetchedProfilColors.current === profilColors) return;
+
+    const fetchColorTypesData = async () => {
+      const colortypes = await fetchColorTypes(profilColors);
+      // Store available color types globally in the store
+      setColorTypes(colortypes);
+      lastFetchedProfilColors.current = profilColors;
+    };
+    fetchColorTypesData();
+  }, [profilColors, setColorTypes, isSecondary]);
 
   // Fetch manufacturers when color type changes
   useEffect(() => {
@@ -116,36 +129,37 @@ export default function ColorSelections({ isSecondary = false }) {
         }
       }
     }
-  }, [index, colorSelectionState[index]?.colorType, getManifacturers, setColorSelectionState]);
+  }, [
+    index,
+    colorSelectionState[index]?.colorType,
+    getManifacturers,
+    setColorSelectionState,
+    colorSelectionState,
+  ]);
 
-  return colorSelectionState[isSecondary ? 1 : 0]?.selectedTrdpgroup === 1 ? ( 
-    <div className="space-y-4 w-full">
-      <div className="flex items-baseline gap-4">
-        {/* Color Type Selection */}
-        <div className="space-y-2">
-          <Label htmlFor="color-type-select" className="text-sm font-medium">
-            Τύπος Χρώματος
-          </Label>
-          <Select value={colorSelectionState[isSecondary ? 1 : 0]?.colorType} onValueChange={handleChangeColorType}>
-            <SelectTrigger id="color-type-select" className="w-full max-w-sm">
-              <SelectValue placeholder="Επιλέξτε τύπο χρώματος" />
-            </SelectTrigger>
-            <SelectContent>
-              {colorTypes.map((colorType) => (
-                <SelectItem key={colorType.id} value={colorType.id.toString()}>
-                  {colorType.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        {/* Conditional rendering based on colorType */}
-        {colorSelectionState[isSecondary ? 1 : 0]?.colorType === "3" ? <ColorCodeInput /> : <ColorManufacturer isSecondary={isSecondary} />}
-        {/* Color Selection Combobox */}
-        {colorSelectionState[isSecondary ? 1 : 0]?.selectedManifacturer && colorSelectionState[isSecondary ? 1 : 0]?.colorType !== "3" && <ManifacturerColors isSecondary={isSecondary} />}
-      </div>
-    </div>
-  ) : (
-    <ColorCodeInput />
-  );
+  const selectedTrdpgroup = currentState?.selectedTrdpgroup;
+  const currentColorType = currentState?.colorType;
+  const selectedManifacturer = currentState?.selectedManifacturer;
+
+  const shouldShowColorTypeSelection = selectedTrdpgroup === 1;
+  const shouldShowColorCodeInputOnly = selectedTrdpgroup !== 1;
+  const shouldShowColorCodeInput = currentColorType === "3";
+  const shouldShowManufacturer = shouldShowColorTypeSelection && currentColorType && currentColorType !== "3";
+  const shouldShowManufacturerColors =
+    shouldShowColorTypeSelection &&
+    selectedManifacturer &&
+    currentColorType !== "3";
+
+  return {
+    colorTypes,
+    currentColorType,
+    selectedManifacturer,
+    handleChangeColorType,
+    shouldShowColorTypeSelection,
+    shouldShowColorCodeInputOnly,
+    shouldShowColorCodeInput,
+    shouldShowManufacturer,
+    shouldShowManufacturerColors,
+  };
 }
+

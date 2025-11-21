@@ -63,14 +63,14 @@ export const useColorSelectionStore = create<ColorSelectionState>()(
         set({
           profilColors,
           colorSelectionState:
-            profilColors === profilColorsType.COLOR
+            profilColors === profilColorsType.COLOR.colorType.toString()
               ? [
                   {
                     ...colorSelectionItem,
                     colorManifacturerValue: { ccCPOUDRAID: "", sky: "" },
                   },
                 ]
-              : profilColors === profilColorsType.DUAL_COLOR
+              : profilColors === profilColorsType.DUAL_COLOR.colorType.toString()
               ? [
                   {
                     ...colorSelectionItem,

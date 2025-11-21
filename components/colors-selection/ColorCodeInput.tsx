@@ -1,24 +1,14 @@
-import { Search } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
+import { useColorCodeInput } from "@/hooks/useColorCodeInput";
 
 export default function ColorCodeInput({ isSecondary = false }) {
-  const { colorSelectionState, setColorSelectionState } = useColorSelectionStore();
-  const index = isSecondary ? 1 : 0;
-  const current = colorSelectionState[index];
-  const handleChangeColorValue = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const c = (event.target as HTMLInputElement).value;
-    const next = [...colorSelectionState];
-    if (next[index]) {
-      next[index] = { ...next[index], colorValue: c };
-      setColorSelectionState(next);
-    }
-  };
+  const { colorValue, shouldShow, handleChangeColorValue } =
+    useColorCodeInput({ isSecondary });
 
-  if (!current || !current.selectedColorCompany) return null;
+  if (!shouldShow) return null;
+
+
 
   return (
     <div className="flex flex-col gap-2">
@@ -30,7 +20,7 @@ export default function ColorCodeInput({ isSecondary = false }) {
           id="color-code-input"
           onChange={handleChangeColorValue}
           disabled={false}
-          value={current?.colorValue || ""}
+          value={colorValue}
           placeholder="Εισάγετε κωδικό..."
         />
       </div>

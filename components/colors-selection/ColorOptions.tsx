@@ -1,38 +1,10 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { profilColorsType } from "./OrderOptions";
-import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-
+import { useColorOptions } from "@/hooks/useColorOptions";
 
 export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
-  const { profilColors, setProfilColors,setColorSelectionState} = useColorSelectionStore();
-
-  const handleProfilColors = (value: string) => {
-    if (value === profilColorsType.WHITE) {
-      const newState = [
-        {
-          colorValue: profilColorsType.WHITE,
-          colorManufacturerValue: { ccCPOUDRAID: "", sky: "" },
-          selectedTrdpgroup: null,
-          manifacturer: [],
-          colorType: "",
-          selectedColorCompany: null,
-          selectedManifacturer: "",
-          colorData: [],
-        },
-      ];
-      setColorSelectionState(newState);
-    } else {
-      setColorSelectionState([]);
-    }
-    setProfilColors(value);
-  };
-  
-
-  useEffect(() => {
-    handleProfilColors(profilColorsType.WHITE);
-  }, []);
+  const { profilColors, handleProfilColors } = useColorOptions();
 
 
   return <div className="space-y-4">
@@ -54,7 +26,7 @@ export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
     </div> */}
     <div className="flex items-center space-x-2">
       <RadioGroupItem 
-        value={profilColorsType.WHITE} 
+        value={profilColorsType.WHITE.colorType.toString()} 
         id="white" 
         disabled={isDisabled}
       />
@@ -64,7 +36,7 @@ export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
     </div>
     <div className="flex items-center space-x-2">
       <RadioGroupItem 
-        value={profilColorsType.COLOR} 
+        value={profilColorsType.COLOR.colorType.toString()} 
         id="color" 
         disabled={isDisabled}
       />
@@ -74,7 +46,7 @@ export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {
     </div>
     <div className="flex items-center space-x-2">
       <RadioGroupItem 
-        value={profilColorsType.DUAL_COLOR} 
+        value={profilColorsType.DUAL_COLOR.colorType.toString()} 
         id="color" 
         disabled={isDisabled}
       />

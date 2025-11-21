@@ -15,58 +15,17 @@ import {
 } from "@/components/ui/command";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-import { useCallback, useEffect, useState } from "react";
+import { useManufacturerColors } from "@/hooks/useManufacturerColors";
 
 export default function ManifacturerColors({ isSecondary = false }) {
-const { colorSelectionState, setColorSelectionState } = useColorSelectionStore();
-  const index = isSecondary ? 1 : 0;
-  const current = colorSelectionState[index];
-  const colorData = current?.colorData || [];
-  const colorManifacturerValue  = current?.colorManifacturerValue.sky || "";
-
-  const setColorManifacturerValue = useCallback((value: { ccCPOUDRAID: string, sky: string }) => {
-    const newState = [...colorSelectionState];
-   
-      newState[index] = { ...newState[index], colorManifacturerValue: value }; 
-      
-    setColorSelectionState(newState);
-  }, [colorSelectionState, setColorSelectionState, index]);
-  const [open, setOpen] = useState(false);
-
-  const handleInputChange = useCallback(
-    (value: string) => {
-      const selectedColor = colorData.find((color) => color.sku === value);
-      setColorManifacturerValue({ ccCPOUDRAID: selectedColor?.ccCPOUDRAID.toString() || "", sky: selectedColor?.sku || "" });
-      
-    },
-    [setColorManifacturerValue, colorData]
-  );
-
-  const handleChangeColor = useCallback(
-    (value: string) => {
-      const selectedColor = colorData.find((color) => color.sku === value);
-      setColorManifacturerValue({ ccCPOUDRAID: selectedColor?.ccCPOUDRAID.toString() || "", sky: selectedColor?.sku || "" });
-    },
-    [setColorManifacturerValue]
-  );
-
-  // const handleManifacturerChangeColors = useCallback(async (manifacturer: string) => {
-  //   const colors = await fetchColorsByManufacturer({
-  //     colorType: current?.colorType,
-  //     selectedManifacturer: manifacturer,
-  //     colorValue: current?.colorValue,
-  //   });
-  //   const newState = [...colorSelectionState];
-  //   newState[index] = { ...newState[index], colorData: colors };
-  //   setColorSelectionState(newState);
-  // }, [colorSelectionState, setColorSelectionState, index]);
-
-  // useEffect(() => {
-  //   if (colorManifacturerValue) {
-  //     handleManifacturerChangeColors(colorManifacturerValue);
-  //   }
-  // }, [colorManifacturerValue, handleManifacturerChangeColors]);
+  const {
+    colorData,
+    colorManifacturerValue,
+    open,
+    setOpen,
+    handleInputChange,
+    handleChangeColor,
+  } = useManufacturerColors({ isSecondary });
 
   return (
     <div className="space-y-2">
@@ -99,7 +58,6 @@ const { colorSelectionState, setColorSelectionState } = useColorSelectionStore()
                     value={color.sku}
                     onSelect={(currentValue) => {
                       handleChangeColor(currentValue);
-                      setOpen(false);
                     }}
                   >
                     <Check
