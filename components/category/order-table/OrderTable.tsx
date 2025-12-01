@@ -133,6 +133,8 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
     }
   };
 
+  const colorSelectionStore = useColorSelectionStore();
+  
   const handleGeneratePDF = async () => {
     try {
       await generateOrderPDF({
@@ -140,6 +142,13 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
         columnSchemas: encodedColumnSchemas,
         categoryName: selectedCategoryDetails?.name || '',
         seriesName: selectedCategoryDetails?.name || '',
+        categoryImageUrl: selectedCategoryDetails?.imgUrl || selectedCategoryDetails?.images?.[0],
+        colorSelection: {
+          profilColors: colorSelectionStore.profilColors,
+          colorSelectionState: colorSelectionStore.colorSelectionState,
+          colorCompanies: colorSelectionStore.colorCompanies,
+          colorTypes: colorSelectionStore.colorTypes,
+        },
       });
       toast.success("PDF δημιουργήθηκε επιτυχώς!");
     } catch (error) {
