@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useApiStore } from "@/lib/api";
 import { ProductDetailsList } from "../ProductDetailsList";
-import { Edit, Save, Trash2, X, Send } from "lucide-react";
+import { Edit, Save, Trash2, X, Send, FileDown } from "lucide-react";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import { useOrderTableStore } from "@/lib/stores/orderTableStore";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import { ColumnSchema } from "@/api/types";
 import Cell from "./Cell";
 import DependOndimesionSelect from "./DependOndimesionSelect";
 import PriceCell from "./PriceCell";
+import { generateOrderPDF } from "@/lib/utils/pdfGenerator";
 
 // Parse column values safely into options array
 
@@ -132,6 +133,21 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
     }
   };
 
+  const handleGeneratePDF = async () => {
+    try {
+      await generateOrderPDF({
+        orders: data,
+        columnSchemas: encodedColumnSchemas,
+        categoryName: selectedCategoryDetails?.name || '',
+        seriesName: selectedCategoryDetails?.name || '',
+      });
+      toast.success("PDF δημιουργήθηκε επιτυχώς!");
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error("Σφάλμα κατά τη δημιουργία PDF");
+    }
+  };
+
   const productColumn = useMemo(
     () => ({
       columnId: 123 - 23,
@@ -237,14 +253,7 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Πίνακας Παραγγελιών</h2>
         <div className="flex gap-2">
-          <Button
-            onClick={handleSubmitOrders}
-            disabled={data.length === 0 || isSubmitting}
-            className="bg-green-600 hover:bg-green-700"
-          >
-            <Send className="h-4 w-4 mr-2" />
-            {isSubmitting ? "Submitting..." : "Submit Orders"}
-          </Button>
+   
           <Button
             onClick={handleAdd}
             disabled={isAdding || editingIndex !== null}
@@ -375,6 +384,25 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
           </tbody>
         </table>
       </CardContent>
+      <div className="flex justify-end gap-2">
+        <Button
+          onClick={handleGeneratePDF}
+          disabled={data.length === 0}
+          variant="outline"
+          className="border-blue-600 text-blue-600 hover:bg-blue-50"
+        >
+          <FileDown className="h-4 w-4 mr-2" />
+          Εξαγωγή PDF
+        </Button>
+        <Button
+          onClick={handleSubmitOrders}
+          disabled={data.length === 0 || isSubmitting}
+          className="bg-green-600 hover:bg-green-700"
+        >
+          <Send className="h-4 w-4 mr-2" />
+          {isSubmitting ? "Παρακαλώ περιμένετε..." : " Υποβολή Παραγγελίας"}
+        </Button>
+      </div>
     </Card>
   );
 };

@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { useCallback, useEffect, useState } from "react";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
 import { useOrderTableStore } from "@/lib/stores/orderTableStore";
-import { profilColorsType } from "@/components/colors-selection/OrderOptions";
+import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
 
 export function useColorCell() {
     const { colorSelectionState,profilColors } = useColorSelectionStore();

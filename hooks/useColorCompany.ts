@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { fetchColorCompanies } from "@/api/colors";
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-import { profilColorsType } from "@/components/colors-selection/OrderOptions";
+import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
 
 interface UseColorCompanyProps {
   isSecondary?: boolean;

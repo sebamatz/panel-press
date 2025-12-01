@@ -7,7 +7,7 @@ import { useOrderTableStore } from "@/lib/stores/orderTableStore";
 import { ICellComponentProps } from "./Cell";
 import { useEffect, useState } from "react";
 import { IGetPriceJToken } from "@/api/types";
-import { profilColorsType } from "@/components/colors-selection/OrderOptions";
+import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
 import { useApiStore } from "@/lib/api";
 export default function PriceCell({selectedValues, column, value, onChange, readOnly, field, onSelectionChange, options }: ICellComponentProps) {
 console.log("selectedValues PriceCell", selectedValues);

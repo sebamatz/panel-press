@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Combobox } from "../ui/combobox"
 import { useParams } from "next/navigation"
 import { fetchCategoryProducts } from "@/api/categories"
-import { profilColorsType } from "../colors-selection/OrderOptions"
+import { profilColorsType } from "../colors-selection/ProfileColorOptions"
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore"
 import Image from "next/image"
 import {

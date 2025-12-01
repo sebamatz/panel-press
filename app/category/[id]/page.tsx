@@ -8,12 +8,11 @@ import {
   CategoryErrorState,
   CategoryDetailsHeader,
   CategoryEmptyState,
-  CategoryDebugInfo,
   extractCategoryName} from "@/components/category"
 import { CategoryProductList } from "@/components/category/CategoryProductList"
 import OrderTable from "@/components/category/order-table/OrderTable"
 import { useApiStore } from "@/lib/stores/appStore"
-import OrderOptions from "@/components/colors-selection/OrderOptions"
+import ProfileColorOptions from "@/components/colors-selection/ProfileColorOptions"
 export default function CategoryDetailsPage() {
   const params = useParams()
   const router = useRouter()
@@ -89,22 +88,15 @@ export default function CategoryDetailsPage() {
             <CategoryEmptyState />
           )}
 
-          {/* Show OrderOptions and OrderTable when there are API items (category loaded) and valid categoryId */}
+          {/* Show ProfileColorOptions and OrderTable when there are API items (category loaded) and valid categoryId */}
           {apiItems.length > 0 && categoryId && (
             <>
               <div className="w-full">
-                <OrderOptions isDisabled={false} />
+                <ProfileColorOptions isDisabled={false} />
               </div>
               {columnSchemas && columnSchemas.length > 0 && <OrderTable />}
             </>
           )}
-
-          {/* Debug information - shows in development */}
-          <CategoryDebugInfo
-            categoryId={categoryId}
-            details={details}
-            apiItems={apiItems}
-          />
         </div>
       </main>
     </>

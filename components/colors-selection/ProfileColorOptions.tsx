@@ -25,26 +25,24 @@ export default function ProfileColorOptions({ isDisabled }: Props) {
   const { selectedCategoryDetails } = useApiStore();
 
   console.log(
-    "CURRENT COLOR SELECTION STORE STATE",
+    "CURRENT COLOR SELECTION STORE STATE", 
     useColorSelectionStore.getState()
   );
-  console.log("CURRENT ORDER TABLE STORE STATE", useOrderTableStore.getState());
+
+
+
 
   return (
     <div className="w-full space-y-6 ">
-      {selectedCategoryDetails && <ColorOptions isDisabled={isDisabled} />}
+     {selectedCategoryDetails && <ColorOptions isDisabled={isDisabled} />}
       {Array.isArray(colorSelectionState) &&
         colorSelectionState.map((_, index) => {
           const isSecondary = index === 1;
-          const selectedTrdpgroup =
-            colorSelectionState[index]?.selectedTrdpgroup;
+          const selectedTrdpgroup = colorSelectionState[index]?.selectedTrdpgroup;
           return (
             <div key={index} className="space-y-4 flex items-baseline gap-4">
               <div className="flex items-baseline gap-4">
-                <ColorCompany
-                  isSecondary={isSecondary}
-                  title={getTitle(index)}
-                />
+                <ColorCompany isSecondary={isSecondary} title={getTitle(index)} />
               </div>
               <div className="flex items-baseline gap-4">
                 {selectedTrdpgroup === 1 ? (
@@ -58,4 +56,6 @@ export default function ProfileColorOptions({ isDisabled }: Props) {
         })}
     </div>
   );
-}
+};
+
+

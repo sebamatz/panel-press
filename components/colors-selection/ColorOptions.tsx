@@ -1,6 +1,6 @@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { profilColorsType } from "./OrderOptions";
+import { profilColorsType } from "./ProfileColorOptions";
 import { useColorOptions } from "@/hooks/useColorOptions";
 
 export default function ColorOptions({ isDisabled }: { isDisabled: boolean }) {

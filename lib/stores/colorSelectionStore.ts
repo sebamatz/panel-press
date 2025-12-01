@@ -9,7 +9,7 @@ import { getItems } from "@/api/fetch";
 import { companySettings } from "@/config";
 import { fetchColorManufacturers, fetchColorTypes } from "@/api/colors";
 import { bOption } from "@/api/utils";
-import { profilColorsType } from "@/components/colors-selection/OrderOptions";
+import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
 import { ColorManufacturer } from "./types";
 
 
@@ -29,17 +29,40 @@ const colorSelectionItem = {
 
 const company = companySettings.company;
 
+const initialColorSelectionState: ColorSelectionState = {
+  colorCompanies: [],
+  profilColors: "",
+  colorTypes: [],
+  colorSelectionState: [],
+  primarySelectedTrdpgroup: null,
+  primaryManifacturer: [],
+  primaryColorType: "",
+  primarySelectedColorCompany: null,
+  primaryColorValue: "",
+  primarySelectedManifacturer: "",
+  primaryColorData: [],
+  primaryColorManifacturerValue: "",
+  secondarySelectedTrdpgroup: null,
+  secondaryManifacturer: [],
+  secondaryColorType: "",
+  secondarySelectedColorCompany: null,
+  secondaryColorValue: "",
+  secondarySelectedManifacturer: "",
+  secondaryColorData: [],
+  secondaryColorManifacturerValue: "",
+};
+
 export const useColorSelectionStore = create<ColorSelectionState>()(
   devtools(
     (set, get) => ({
       // Initial state
-      colorCompanies: [],
-      profilColors: "",
-      colorTypes: [],
-      colorSelectionState: [],
+      colorCompanies:initialColorSelectionState.colorCompanies,
+      profilColors: initialColorSelectionState.profilColors,
+      colorTypes: initialColorSelectionState.colorTypes,
+      colorSelectionState: initialColorSelectionState.colorSelectionState,
 
       // Primary color state
-      primarySelectedTrdpgroup: null,
+      primarySelectedTrdpgroup: initialColorSelectionState.primarySelectedTrdpgroup,
       primaryManifacturer: [],
       primaryColorType: "",
       primarySelectedColorCompany: null,
@@ -144,31 +167,7 @@ export const useColorSelectionStore = create<ColorSelectionState>()(
       },
 
       resetAll: () => {
-        set({
-          colorCompanies: [],
-          profilColors: "",
-          colorTypes: [],
-
-          // Reset primary color state
-          primarySelectedTrdpgroup: null,
-          primaryManifacturer: [],
-          primaryColorType: "",
-          primarySelectedColorCompany: null,
-          primaryColorValue: "",
-          primarySelectedManifacturer: "",
-          primaryColorData: [],
-          primaryColorManifacturerValue: "",
-
-          // Reset secondary color state
-          secondarySelectedTrdpgroup: null,
-          secondaryManifacturer: [],
-          secondaryColorType: "",
-          secondarySelectedColorCompany: null,
-          secondaryColorValue: "",
-          secondarySelectedManifacturer: "",
-          secondaryColorData: [],
-          secondaryColorManifacturerValue: "",
-        });
+        set(initialColorSelectionState);
       },
     }),
     {

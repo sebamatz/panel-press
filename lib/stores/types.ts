@@ -65,41 +65,41 @@ export interface ColorSelectionState {
   secondaryColorManifacturerValue: string;
 
   // Actions
-  setProfilColors: (profilColors: string) => void;
-  setColorCompanies: (colorCompanies: ColorCompany[]) => void;
-  setColorTypes: (colorTypes: ColorType[]) => void;
-  setColorSelectionState: (colorSelectionState: ColorSelectionItem[]) => void;
+  setProfilColors?: (profilColors: string) => void;
+  setColorCompanies?: (colorCompanies: ColorCompany[]) => void;
+  setColorTypes?: (colorTypes: ColorType[]) => void;
+  setColorSelectionState?: (colorSelectionState: ColorSelectionItem[]) => void;
 
   // Primary color actions
   setPrimarySelectedTrdpgroup: (
     selectedTrdpgroup: number | null,
     isSecondary?: boolean
   ) => void;
-  setPrimaryManifacturer: (manifacturer: Manufacturer[]) => void;
-  setPrimaryColorType: (colorType: string) => void;
-  setPrimarySelectedColorCompany: (selectedColorCompany: number | null) => void;
-  setPrimaryColorValue: (colorValue: string) => void;
-  setPrimarySelectedManifacturer: (selectedManifacturer: string) => void;
-  setPrimaryColorData: (colorData: IColorData[]) => void;
-  setPrimaryColorManifacturerValue: (colorManifacturerValue: string) => void;
+  setPrimaryManifacturer?: (manifacturer: Manufacturer[]) => void;
+  setPrimaryColorType?: (colorType: string) => void;
+  setPrimarySelectedColorCompany?: (selectedColorCompany: number | null) => void;
+  setPrimaryColorValue?: (colorValue: string) => void;
+  setPrimarySelectedManifacturer?: (selectedManifacturer: string) => void;
+  setPrimaryColorData?: (colorData: IColorData[]) => void;
+  setPrimaryColorManifacturerValue?: (colorManifacturerValue: string) => void;
 
   // Secondary color actions
-  setSecondarySelectedTrdpgroup: (selectedTrdpgroup: number | null) => void;
-  setSecondaryManifacturer: (manifacturer: Manufacturer[]) => void;
-  setSecondaryColorType: (colorType: string) => void;
-  setSecondarySelectedColorCompany: (
+  setSecondarySelectedTrdpgroup?: (selectedTrdpgroup: number | null) => void;
+  setSecondaryManifacturer?: (manifacturer: Manufacturer[]) => void;
+  setSecondaryColorType?: (colorType: string) => void;
+  setSecondarySelectedColorCompany?: (
     selectedColorCompany: number | null
   ) => void;
-  setSecondaryColorValue: (colorValue: string) => void;
-  setSecondarySelectedManifacturer: (selectedManifacturer: string) => void;
-  setSecondaryColorData: (colorData: IColorData[]) => void;
-  setSecondaryColorManifacturerValue: (colorManifacturerValue: string) => void;
+  setSecondaryColorValue?: (colorValue: string) => void;
+  setSecondarySelectedManifacturer?: (selectedManifacturer: string) => void;
+  setSecondaryColorData?: (colorData: IColorData[]) => void;
+  setSecondaryColorManifacturerValue?: (colorManifacturerValue: string) => void;
 
   // API Actions
-  fetchColorTypes: () => Promise<void>;
-  fetchManufacturers: (isSecondary?: boolean) => Promise<void>;
-  fetchColorCompanies: () => Promise<void>;
-  fetchColors: (
+  fetchColorTypes?: () => Promise<void>;
+  fetchManufacturers?: (isSecondary?: boolean) => Promise<void>;
+  fetchColorCompanies?: () => Promise<void>;
+  fetchColors?: (
     params: {
       colorType: string;
       selectedManifacturer: string;
@@ -109,15 +109,15 @@ export interface ColorSelectionState {
   ) => Promise<void>;
 
   // Reset actions
-  resetPrimaryColorType: () => void;
+  resetPrimaryColorType?: () => void;
   resetPrimaryManufacturer: () => void;
-  resetPrimaryColorValue: () => void;
-  resetPrimaryColorData: () => void;
-  resetSecondaryColorType: () => void;
-  resetSecondaryManufacturer: () => void;
-  resetSecondaryColorValue: () => void;
-  resetSecondaryColorData: () => void;
-  resetAll: () => void;
+  resetPrimaryColorValue?: () => void;
+  resetPrimaryColorData?: () => void;
+  resetSecondaryColorType?: () => void;
+  resetSecondaryManufacturer?: () => void;
+  resetSecondaryColorValue?: () => void;
+  resetSecondaryColorData?: () => void;
+  resetAll?: () => void;
 }
 
 export interface ApiState {

@@ -3,6 +3,8 @@ import { ComboboxItem, Combobox } from "@/components/ui/combobox"
 import { useApiStore } from "@/lib/stores/appStore"
 import { Package } from "lucide-react"
 import Image from "next/image"
+import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore"
+import { useOrderTableStore } from "@/lib/stores/orderTableStore"
 interface CategoryProductSelectorProps {
   products: ComboboxItem[]
   categoryId: string | number
@@ -16,9 +18,16 @@ export function CategoryProductList({
 }: CategoryProductSelectorProps) {
   const [selectedItem, setSelectedItem] = useState<ComboboxItem | null>(null)
   const { fetchColumnSchema,setSelectedCategoryDetails } = useApiStore()
+  const { resetAll } = useColorSelectionStore()
+  const { clearOrders ,resetUI} = useOrderTableStore()
 
   const handleProductSelect = (item: ComboboxItem | null) => {
     setSelectedItem(item)
+    //reset order table selection state
+    clearOrders()
+    resetUI()
+    //reset color selection state
+    resetAll()
     
     // Fetch column schema when a category is selected
     if (item?.id) {
@@ -32,7 +41,7 @@ export function CategoryProductList({
        <Combobox
         items={products}
         icon={<Package className="h-5 w-5" />}
-        placeholder="Επιλέξτε ένα προϊόν..."
+        placeholder="Επιλέξτε"
         searchPlaceholder="Αναζήτηση προϊόντων..."
         emptyMessage="Δεν βρέθηκαν προϊόντα."
         showBadge={true}

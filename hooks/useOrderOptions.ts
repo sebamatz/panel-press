@@ -1,5 +1,5 @@
 import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-import { profilColorsType } from "@/components/colors-selection/OrderOptions";
+import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
 
 export function useOrderOptions() {
   const { colorSelectionState, profilColors } = useColorSelectionStore();
