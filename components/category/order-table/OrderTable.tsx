@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Edit, Save, Trash2, X, Send, FileDown } from "lucide-react";
 import Cell from "./Cell";
-import { useOrderTable } from "./hooks/useOrderTable"; 
+import { useOrderTable } from "./hooks/useOrderTable";
+import { useOrders } from "./hooks/useOrders";
 
 type DynamicTableProps = {
   initialData?: Record<string, any>[];
@@ -30,6 +31,9 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
     handleSubmitOrders,
     handleGeneratePDF,
   } = useOrderTable();
+
+  const { submitOrders } = useOrders();
+
   return (
     <Card className="p-4 shadow-md">
       <div className="flex justify-between items-center mb-4">
@@ -174,7 +178,7 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
           Εξαγωγή PDF
         </Button>
         <Button
-          onClick={handleSubmitOrders}
+          onClick={submitOrders}
           disabled={data.length === 0 || isSubmitting}
           className="bg-green-600 hover:bg-green-700"
         >
