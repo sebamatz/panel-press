@@ -1,268 +1,40 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useApiStore } from "@/lib/api";
-import { ProductDetailsList } from "../ProductDetailsList";
 import { Edit, Save, Trash2, X, Send, FileDown } from "lucide-react";
-import { useColorSelectionStore } from "@/lib/stores/colorSelectionStore";
-import { useOrderTableStore } from "@/lib/stores/orderTableStore";
-import { toast } from "sonner";
-import ColorCell from "./ColorCell";
-import DimensionCell from "./DimensionCell";
-import { normalizeRowForSave, parseValues } from "./utils";
-import { ColumnSchema } from "@/api/types";
-
 import Cell from "./Cell";
-import DependOndimesionSelect from "./DependOndimesionSelect";
-import PriceCell from "./PriceCell";
-import { generateOrderPDF } from "@/lib/utils/pdfGenerator";
+import { useOrderTable } from "./hooks/useOrderTable"; 
 
-// Parse column values safely into options array
-
-// Cell component to isolate rerenders to only the changed cell
-
-// Stable custom component for the product column
 type DynamicTableProps = {
   initialData?: Record<string, any>[];
 };
-const ProductCellComponent: React.FC<{
-  field: string;
-  value: any;
-  onChange: (field: string, value: any) => void;
-  onSelectionChange?: (value: any) => void;
-}> = React.memo(({ field, onChange }) => {
-  const handleSelectionChange = useCallback(
-    (value: any) => {
-      onChange(field, value);
-    },
-    [field, onChange]
-  );
-
-  return <ProductDetailsList onSelectionChange={handleSelectionChange} />;
-});
 
 const DynamicTable: React.FC<DynamicTableProps> = () => {
-  const { columnSchemas, selectedCategoryDetails } = useApiStore();
-  // Use store state and actions
   const {
-    orders: data,
+    data,
     isAdding,
     editingIndex,
     newRow,
     draftRow,
     isSubmitting,
     submitError,
-    addOrder,
-    deleteOrder,
-    setIsAdding,
-    setEditingIndex,
-    setDraftRow,
-    setNewRow,
-    updateNewRowField,
-    updateDraftRowField,
-    saveEdit,
-    cancelEdit,
-    submitOrders,
-    clearOrders,
-    resetUI,
-  } = useOrderTableStore();
-
-  const handleAdd = () => {
-    setNewRow({});
-    setIsAdding(true);
-  };
-
-  const handleInputChange = useCallback(
-    (field: string, value: any) => {
-      updateNewRowField(field, value);
-    },
-    [updateNewRowField]
-  );
-
-  const handleSave = () => {
-    if (newRow.product == null && selectedCategoryDetails?.priceC !== 1) {
-      toast.error("Παρακαλώ επιλέξτε προϊόν");
-      return;
-    }
-    if (!newRow.qty1) {
-      toast.error("Παρακαλώ επιλέξτε ποσότητα");
-      return;
-    }
-    // const normalized = normalizeRowForSave(newRow);
-    addOrder(newRow);
-    resetUI();
-  };
-
-  const handleDelete = useCallback(
-    (rowIndex: number) => {
-      deleteOrder(rowIndex);
-    },
-    [deleteOrder]
-  );
-
-  const handleEdit = useCallback(
-    (rowIndex: number) => {
-      setEditingIndex(rowIndex);
-      setDraftRow({ ...data[rowIndex] });
-    },
-    [data, setEditingIndex, setDraftRow]
-  );
-
-  const handleEditInputChange = useCallback(
-    (field: string, value: any) => {
-      updateDraftRowField(field, value);
-    },
-    [updateDraftRowField]
-  );
-
-  const handleSaveEdit = useCallback(() => {
-    if (editingIndex === null) return;
-    saveEdit();
-  }, [editingIndex, draftRow, saveEdit]);
-
-  const handleCancelEdit = useCallback(() => {
-    cancelEdit();
-  }, [cancelEdit]);
-
-  const handleSubmitOrders = async () => {
-    try {
-      await submitOrders();
-      toast.success("Orders submitted successfully!");
-    } catch (error) {
-      toast.error("Failed to submit orders");
-    }
-  };
-
-  const colorSelectionStore = useColorSelectionStore();
-  
-  const handleGeneratePDF = async () => {
-    try {
-      await generateOrderPDF({
-        orders: data,
-        columnSchemas: encodedColumnSchemas,
-        categoryName: selectedCategoryDetails?.name || '',
-        seriesName: selectedCategoryDetails?.name || '',
-        categoryImageUrl: selectedCategoryDetails?.imgUrl || selectedCategoryDetails?.images?.[0],
-        colorSelection: {
-          profilColors: colorSelectionStore.profilColors,
-          colorSelectionState: colorSelectionStore.colorSelectionState,
-          colorCompanies: colorSelectionStore.colorCompanies,
-          colorTypes: colorSelectionStore.colorTypes,
-        },
-      });
-      toast.success("PDF δημιουργήθηκε επιτυχώς!");
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      toast.error("Σφάλμα κατά τη δημιουργία PDF");
-    }
-  };
-
-  const productColumn = useMemo(
-    () => ({
-      columnId: 123 - 23,
-      field: "product",
-      title: "ΠΡΟΪΟΝ",
-      colType: "string",
-      values: null,
-      component: ProductCellComponent,
-    }),
-    []
-  );
-
-  const colorColumn = useMemo(
-    () => ({
-      editable: true,
-      component: ColorCell,
-      locked: true,
-    }),
-    []
-  );
-  const dimensionColumn = useMemo(
-    () => ({
-      options: columnSchemas?.find((col) => col.field === "dimension")?.values,
-      component: DimensionCell,
-    }),
-    []
-  );
-
-  const gemisiColumn = useMemo(
-    () => ({
-      options: columnSchemas?.find((col) => col.field === "gemisi")?.values,
-      component: DependOndimesionSelect,
-    }),
-    []
-  );
-  const lamarinColumn = useMemo(
-    () => ({
-      options: columnSchemas?.find((col) => col.field === "lamarina")?.values,
-      component: DependOndimesionSelect,
-    }),
-    []
-  );
-
-  const columns = useMemo(
-    () =>
-      columnSchemas && columnSchemas.length > 0
-        ? columnSchemas.map((item) => ({
-            columnId: item.columnId,
-            field: item.field,
-            title: item.title,
-            colType: item.colType,
-            values: item.values,
-            component: (item as any).component,
-          }))
-        : [],
-    [columnSchemas]
-  );
-
-  const excludedColumns = ["sku"];
-
-  const encodedColumnSchemasWithoutId = columns.filter(
-    (col) => !excludedColumns.includes(col.field)
-  );
-
-  const updatedColumns = encodedColumnSchemasWithoutId.map((col) => {
-    if (col.field === "dimension") {
-      return { ...col, ...dimensionColumn };
-    }
-    if (col.field === "color") {
-      return { ...col, ...colorColumn };
-    }
-    if (col.field === "gemisi") {
-      return { ...col, ...gemisiColumn };
-    }
-    if (col.field === "lamarina") {
-      return { ...col, ...lamarinColumn };
-    }
-    if (col.field === "netamnt") {
-      return { ...col, ...{ component: PriceCell } };
-    }
-    return col;
-  });
-
-  // If the category has price calculation, show the price column, otherwise show the product column
-  const encodedColumnSchemas = useMemo(
-    () =>
-      selectedCategoryDetails?.priceC === 1
-        ? updatedColumns
-        : [productColumn, ...updatedColumns],
-    [productColumn, updatedColumns]
-  );
-
-  const { primaryColorValue } = useColorSelectionStore();
-  useEffect(() => {
-    if (primaryColorValue) {
-      handleInputChange("color", primaryColorValue);
-    }
-  }, [primaryColorValue, handleInputChange]);
-
-  useEffect(() => {}, [newRow]);
+    encodedColumnSchemas,
+    handleAdd,
+    handleInputChange,
+    handleSave,
+    handleDelete,
+    handleEdit,
+    handleEditInputChange,
+    handleSaveEdit,
+    handleCancelEdit,
+    handleSubmitOrders,
+    handleGeneratePDF,
+  } = useOrderTable();
   return (
     <Card className="p-4 shadow-md">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">Πίνακας Παραγγελιών</h2>
         <div className="flex gap-2">
-   
           <Button
             onClick={handleAdd}
             disabled={isAdding || editingIndex !== null}
@@ -358,18 +130,16 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
 
             {isAdding && (
               <tr>
-                {encodedColumnSchemas.map((col) => {
-                  return (
-                    <Cell
-                      readOnly={false}
-                      selectedValues={newRow}
-                      key={col.columnId}
-                      column={col as any}
-                      value={newRow[col.field]}
-                      onChange={handleInputChange}
-                    />
-                  );
-                })}
+                {encodedColumnSchemas.map((col) => (
+                  <Cell
+                    readOnly={false}
+                    selectedValues={newRow}
+                    key={col.columnId}
+                    column={col as any}
+                    value={newRow[col.field]}
+                    onChange={handleInputChange}
+                  />
+                ))}
                 <td className="border border-gray-300 p-2">
                   <Button
                     variant="ghost"
@@ -383,7 +153,7 @@ const DynamicTable: React.FC<DynamicTableProps> = () => {
                     variant="ghost"
                     className="p-1 text-red-600 hover:text-red-700 hover:bg-red-50"
                     aria-label="Ακύρωση"
-                    onClick={cancelEdit}
+                    onClick={handleCancelEdit}
                   >
                     <X className="h-4 w-4" />
                   </Button>

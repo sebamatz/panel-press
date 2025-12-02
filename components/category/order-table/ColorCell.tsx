@@ -9,7 +9,7 @@ export function useColorCell() {
     const [color, setColor] = useState("");
 
     const getColor = useCallback(() => {
-        if(profilColors === profilColorsType.WHITE){
+        if(profilColors === profilColorsType.WHITE.colorType.toString()){
             return "Λευκό";
         }
         if (!colorSelectionState || colorSelectionState.length === 0) return "";

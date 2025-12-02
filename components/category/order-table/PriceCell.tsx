@@ -28,7 +28,7 @@ console.log("profilColors", profilColors);
             Category: selectedbaseCategory,
             Series: selectedCategoryDetails?.id,
             SKU: selectedValues.product?.sku || "",
-            Color: profilColors === profilColorsType.WHITE ? 4 : 2,
+            Color: profilColors === profilColorsType.WHITE.colorType.toString() ? 4 : 2,
             QTY: selectedValues.qty1,
             UTBL03: selectedValues.dimension.UTBL03,
             gemisi: selectedValues.gemisi?.id || 0,
@@ -48,6 +48,6 @@ console.log("profilColors", profilColors);
         if(selectedValues.qty1 && selectedValues.dimension && selectedValues.gemisi && selectedValues.lamarina){
             handleGetPrice();
         }
-    }, [selectedValues.qty1, selectedValues.dimension, selectedValues.gemisi, selectedValues.lamarina]);
+    }, [selectedValues.qty1, selectedValues.dimension, selectedValues.gemisi, selectedValues.lamarina,profilColors]);
     return <span>{price}</span>
 }

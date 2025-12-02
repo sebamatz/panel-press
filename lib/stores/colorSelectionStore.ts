@@ -1,20 +1,9 @@
 import { ColorSelectionState } from "./types";
 
-
-
-
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
-import { getItems } from "@/api/fetch";
 import { companySettings } from "@/config";
-import { fetchColorManufacturers, fetchColorTypes } from "@/api/colors";
-import { bOption } from "@/api/utils";
 import { profilColorsType } from "@/components/colors-selection/ProfileColorOptions";
-import { ColorManufacturer } from "./types";
-
-
-
-
 
 const colorSelectionItem = {
   selectedTrdpgroup: null,
@@ -31,7 +20,7 @@ const company = companySettings.company;
 
 const initialColorSelectionState: ColorSelectionState = {
   colorCompanies: [],
-  profilColors: "",
+  profilColors: profilColorsType.WHITE.colorType.toString(),
   colorTypes: [],
   colorSelectionState: [],
   primarySelectedTrdpgroup: null,
@@ -56,13 +45,14 @@ export const useColorSelectionStore = create<ColorSelectionState>()(
   devtools(
     (set, get) => ({
       // Initial state
-      colorCompanies:initialColorSelectionState.colorCompanies,
+      colorCompanies: initialColorSelectionState.colorCompanies,
       profilColors: initialColorSelectionState.profilColors,
       colorTypes: initialColorSelectionState.colorTypes,
       colorSelectionState: initialColorSelectionState.colorSelectionState,
 
       // Primary color state
-      primarySelectedTrdpgroup: initialColorSelectionState.primarySelectedTrdpgroup,
+      primarySelectedTrdpgroup:
+        initialColorSelectionState.primarySelectedTrdpgroup,
       primaryManifacturer: [],
       primaryColorType: "",
       primarySelectedColorCompany: null,
@@ -93,7 +83,8 @@ export const useColorSelectionStore = create<ColorSelectionState>()(
                     colorManifacturerValue: { ccCPOUDRAID: "", sky: "" },
                   },
                 ]
-              : profilColors === profilColorsType.DUAL_COLOR.colorType.toString()
+              : profilColors ===
+                profilColorsType.DUAL_COLOR.colorType.toString()
               ? [
                   {
                     ...colorSelectionItem,
@@ -108,8 +99,8 @@ export const useColorSelectionStore = create<ColorSelectionState>()(
         }),
       setColorCompanies: (colorCompanies) => set({ colorCompanies }),
       setColorTypes: (colorTypes) => set({ colorTypes }),
-      setColorSelectionState: (colorSelectionState) => set({ colorSelectionState }),
-
+      setColorSelectionState: (colorSelectionState) =>
+        set({ colorSelectionState }),
 
       // Reset actions
       resetPrimaryColorType: () => {
