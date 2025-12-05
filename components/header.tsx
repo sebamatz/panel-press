@@ -1,11 +1,20 @@
-"use client"
+"use client";
 
-import { Search, Bell, User } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Search, Bell, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Separator } from "@/components/ui/separator"
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+
+const handleSave = () => {
+  const value = document.getElementById("searchValue")?.value;
+  localStorage.setItem("searchValue", value);
+};
+const handleClear = () => {
+  localStorage.removeItem("searchValue");
+  window.location.reload();
+};
 
 export function Header() {
   return (
@@ -21,18 +30,40 @@ export function Header() {
             <span className="text-sm font-normal text-gray-500 ml-2">S.A</span>
           </div>
         </div>
-
+        <div className="flex  gap-2">
+          <input
+            className="border border-gray-300 rounded-md p-2"
+            type="text"
+            id="searchValue"
+            placeholder="Enter url value"
+          />
+          <button
+            className="border border-gray-300 rounded-md p-2"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+          <button
+            className="border border-gray-300 rounded-md p-2"
+            onClick={handleClear}
+          >
+            Clear
+          </button>
+        </div>
         <div className="flex items-center space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input placeholder="Αναζήτηση προϊόντων..." className="pl-10 w-64" />
+            <Input
+              placeholder="Αναζήτηση προϊόντων..."
+              className="pl-10 w-64"
+            />
           </div>
-  
+
           <Button variant="ghost" size="icon">
             <User className="h-5 w-5" />
           </Button>
         </div>
       </div>
     </header>
-  )
+  );
 }
