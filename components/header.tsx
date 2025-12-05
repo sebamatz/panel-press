@@ -3,20 +3,59 @@
 import { Search, Bell, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
+import { useState, useEffect } from "react";
 
-const handleSave = () => {
-  const value = document.getElementById("searchValue")?.value;
-  localStorage.setItem("searchValue", value);
-};
-const handleClear = () => {
-  localStorage.removeItem("searchValue");
-  window.location.reload();
-};
+const API_SERVERS = {
+  remote: {
+    label: "Remote Server",
+    value: "https://www.alfaeorders.com:19443",
+  },
+  local: {
+    label: "Local Server",
+    value: "http://apipda.sertorius.gr:19581",
+  },
+} as const;
 
 export function Header() {
+  const [apiServer, setApiServer] = useState<string>(() => {
+    // Initialize from localStorage if available, otherwise use default
+    if (typeof window !== "undefined") {
+      const savedServer = localStorage.getItem("searchValue");
+      return savedServer || API_SERVERS.remote.value;
+    }
+    return API_SERVERS.remote.value;
+  });
+
+  useEffect(() => {
+    // Load saved server from localStorage on mount
+    if (typeof window !== "undefined") {
+      const savedServer = localStorage.getItem("searchValue");
+      if (savedServer) {
+        setApiServer(savedServer);
+      } else {
+        // Set default if nothing is saved
+        localStorage.setItem("searchValue", API_SERVERS.remote.value);
+      }
+    }
+  }, []);
+
+  const handleServerChange = (value: string) => {
+    setApiServer(value);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("searchValue", value);
+    }
+    // Changes will be applied to next API calls without reload
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -30,25 +69,23 @@ export function Header() {
             <span className="text-sm font-normal text-gray-500 ml-2">S.A</span>
           </div>
         </div>
-        <div className="flex  gap-2">
-          <input
-            className="border border-gray-300 rounded-md p-2"
-            type="text"
-            id="searchValue"
-            placeholder="Enter url value"
-          />
-          <button
-            className="border border-gray-300 rounded-md p-2"
-            onClick={handleSave}
-          >
-            Save
-          </button>
-          <button
-            className="border border-gray-300 rounded-md p-2"
-            onClick={handleClear}
-          >
-            Clear
-          </button>
+        <div className="flex gap-2 items-center">
+          <label className="text-sm text-gray-600 whitespace-nowrap">
+            API Server:
+          </label>
+          <Select value={apiServer} onValueChange={handleServerChange}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select server" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={API_SERVERS.remote.value}>
+                {API_SERVERS.remote.label}
+              </SelectItem>
+              <SelectItem value={API_SERVERS.local.value}>
+                {API_SERVERS.local.label}
+              </SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="flex items-center space-x-4">
           <div className="relative">

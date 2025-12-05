@@ -3,7 +3,7 @@ import { domain as domainConfig } from "@/config"; //
 import { companySettings } from "@/config";
 import { putOrderMock } from "./mocks";
 
-const getDomain = (): string => {
+export const getDomain = (): string => {
   if (typeof window !== "undefined") {
     const searchValue = localStorage.getItem("searchValue");
     return searchValue || domainConfig;

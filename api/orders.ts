@@ -1,4 +1,4 @@
-import { domain } from "@/config";
+import { getDomain } from "./fetch";
 // submitOrders: async () => {
 //     const state = get()
 //     if (state.orders.length === 0) {
@@ -45,7 +45,7 @@ import { domain } from "@/config";
 
 export const submitOrders = async (orders: any[]) => {
   try {
-    const response = await fetch(`${domain}/erpapi/putorder`, {
+    const response = await fetch(`${getDomain()}/erpapi/putorder`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
