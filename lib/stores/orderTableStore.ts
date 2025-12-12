@@ -1,52 +1,52 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
-import { submitOrders } from '@/api/fetch'
-import { companySettings } from '@/config'
+import { create } from "zustand";
+import { devtools } from "zustand/middleware";
+import { submitOrders } from "@/api/fetch";
+import { companySettings } from "@/config";
 
 export interface OrderRow {
-  [key: string]: any
-  product?: any
-  color?: string
-  dimension?: any
-  gemisi?: any
-  lamarina?: any
+  [key: string]: any;
+  product?: any;
+  color?: string;
+  dimension?: any;
+  gemisi?: any;
+  lamarina?: any;
 }
 
 interface OrderTableState {
   // Order data
-  orders: OrderRow[]
-  
+  orders: OrderRow[];
+
   // UI state
-  isAdding: boolean
-  editingIndex: number | null
-  draftRow: OrderRow
-  newRow: OrderRow
-  
+  isAdding: boolean;
+  editingIndex: number | null;
+  draftRow: OrderRow;
+  newRow: OrderRow;
+
   // API state
-  isSubmitting: boolean
-  submitError: string | null
-  
+  isSubmitting: boolean;
+  submitError: string | null;
+
   // Actions
-  addOrder: (order: OrderRow) => void
-  updateOrder: (index: number, order: OrderRow) => void
-  deleteOrder: (index: number) => void
-  
+  addOrder: (order: OrderRow) => void;
+  updateOrder: (index: number, order: OrderRow) => void;
+  deleteOrder: (index: number) => void;
+
   // UI actions
-  setIsAdding: (isAdding: boolean) => void
-  setEditingIndex: (index: number | null) => void
-  setDraftRow: (data: OrderRow) => void
-  setNewRow: (data: OrderRow) => void
-  updateNewRowField: (field: string, value: any) => void
-  updateDraftRowField: (field: string, value: any) => void
-  updateAllRowsField: (field: string, value: any) => void
+  setIsAdding: (isAdding: boolean) => void;
+  setEditingIndex: (index: number | null) => void;
+  setDraftRow: (data: OrderRow) => void;
+  setNewRow: (data: OrderRow) => void;
+  updateNewRowField: (field: string, value: any) => void;
+  updateDraftRowField: (field: string, value: any) => void;
+  updateAllRowsField: (field: string, value: any) => void;
   // Edit actions
-  saveEdit: () => void
-  cancelEdit: () => void
-  
+  saveEdit: () => void;
+  cancelEdit: () => void;
+
   // API actions
-  submitOrders: () => Promise<void>
-  clearOrders: () => void
-  resetUI: () => void
+  submitOrders: () => Promise<void>;
+  clearOrders: () => void;
+  resetUI: () => void;
 }
 
 export const useOrderTableStore = create<OrderTableState>()(
@@ -64,56 +64,59 @@ export const useOrderTableStore = create<OrderTableState>()(
       // Order CRUD actions
       addOrder: (order) => {
         set((state) => ({
-          orders: [...state.orders, order]
-        }))
+          orders: [...state.orders, order],
+        }));
       },
 
       updateOrder: (index, order) => {
         set((state) => ({
-          orders: state.orders.map((item, i) => (i === index ? order : item))
-        }))
+          orders: state.orders.map((item, i) => (i === index ? order : item)),
+        }));
       },
 
       deleteOrder: (index) => {
         set((state) => ({
           orders: state.orders.filter((_, i) => i !== index),
-          editingIndex: state.editingIndex === index ? null : 
-                       state.editingIndex && state.editingIndex > index ? 
-                       state.editingIndex - 1 : state.editingIndex
-        }))
+          editingIndex:
+            state.editingIndex === index
+              ? null
+              : state.editingIndex && state.editingIndex > index
+              ? state.editingIndex - 1
+              : state.editingIndex,
+        }));
       },
 
       // UI state actions
       setIsAdding: (isAdding) => set({ isAdding }),
-      
+
       setEditingIndex: (editingIndex) => set({ editingIndex }),
-      
+
       setDraftRow: (draftRow) => set({ draftRow }),
-      
+
       setNewRow: (newRow) => set({ newRow }),
-      
+
       updateNewRowField: (field, value) => {
         set((state) => ({
-          newRow: { ...state.newRow, [field]: value }
-        }))
+          newRow: { ...state.newRow, [field]: value },
+        }));
       },
       updateDraftRowField: (field, value) => {
         set((state) => ({
-          draftRow: { ...state.draftRow, [field]: value }
-        }))
+          draftRow: { ...state.draftRow, [field]: value },
+        }));
       },
       updateAllRowsField: (field: string, value: any) => {
         set((state) => ({
-          orders: state.orders.map((order) => ({ ...order, [field]: value }))
+          orders: state.orders.map((order) => ({ ...order, [field]: value })),
         }));
       },
 
       // Edit actions
       saveEdit: () => {
-        const state = get()
+        const state = get();
         if (state.editingIndex !== null) {
-          state.updateOrder(state.editingIndex, state.draftRow)
-          state.resetUI()
+          state.updateOrder(state.editingIndex, state.draftRow);
+          state.resetUI();
         }
       },
 
@@ -124,62 +127,66 @@ export const useOrderTableStore = create<OrderTableState>()(
             isAdding: false,
             newRow: {},
             editingIndex: null,
-            draftRow: {}
+            draftRow: {},
           });
         } else {
           set({
             editingIndex: null,
-            draftRow: {}
+            draftRow: {},
           });
         }
       },
 
       // API actions
       submitOrders: async () => {
-        const state = get()
+        const state = get();
         if (state.orders.length === 0) {
-          set({ submitError: 'No orders to submit' })
-          return
+          set({ submitError: "No orders to submit" });
+          return;
         }
 
-        set({ isSubmitting: true, submitError: null })
+        set({ isSubmitting: true, submitError: null });
 
         try {
           // Transform orders to API format
-          const apiOrders = state.orders.map(order => ({
+          const apiOrders = state.orders.map((order) => ({
             Company: companySettings.company,
             bOption: 0,
             trdr: 3975, // Default trader ID - should be dynamic
             trdbranch: 125, // Default branch ID - should be dynamic
-            comments: order.comments || '',
-            mtrl: order.product?.SKU || order.product?.sku || 10069, // Product SKU or default
-            commentS1: order.color || '',
+            comments: order.comments || "",
+            commentS1: order.color || "",
             qtY1: order.quantity1 || 0,
             qtY2: order.quantity2 || 0,
+            price: order.price || 0,
+            mtrl: order.mtrl || 0,
             // Add other fields as needed
-            ...order
-          }))
+            ...order,
+          }));
 
-          const response = await submitOrders(apiOrders)
-          
+          const response = await submitOrders(apiOrders);
+
           if (response.response.ok) {
             // Clear orders on successful submission
-            state.clearOrders()
-            set({ isSubmitting: false, submitError: null })
+            state.clearOrders();
+            set({ isSubmitting: false, submitError: null });
           } else {
-            throw new Error('Failed to submit orders')
+            throw new Error("Failed to submit orders");
           }
         } catch (error) {
-          console.error('Error submitting orders:', error)
-          set({ 
-            isSubmitting: false, 
-            submitError: error instanceof Error ? error.message : 'Failed to submit orders' 
-          })
+          console.error("Error submitting orders:", error);
+          set({
+            isSubmitting: false,
+            submitError:
+              error instanceof Error
+                ? error.message
+                : "Failed to submit orders",
+          });
         }
       },
 
       clearOrders: () => {
-        set({ orders: [] })
+        set({ orders: [] });
       },
 
       resetUI: () => {
@@ -187,13 +194,12 @@ export const useOrderTableStore = create<OrderTableState>()(
           isAdding: false,
           editingIndex: null,
           draftRow: {},
-          newRow: {}
-        })
-      }
+          newRow: {},
+        });
+      },
     }),
     {
-      name: 'order-table-store'
+      name: "order-table-store",
     }
   )
-)
-
+);
