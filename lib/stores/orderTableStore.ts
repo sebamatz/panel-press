@@ -139,6 +139,7 @@ export const useOrderTableStore = create<OrderTableState>()(
 
       // API actions
       submitOrders: async () => {
+        debugger;
         const state = get();
         if (state.orders.length === 0) {
           set({ submitError: "No orders to submit" });

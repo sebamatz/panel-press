@@ -21,7 +21,7 @@ const API_SERVERS = {
   },
   local: {
     label: "Local Server",
-    value: "http://apipda.sertorius.gr:19581",
+    value: "https://gmapi.kfertilizers.gr:19581",
   },
 } as const;
 

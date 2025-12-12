@@ -58,6 +58,8 @@ export const useOrders = () => {
       //  JToken:{"ColorType1":1, "diastasi":1, "fora":"Δεξιά", "gemisi":1, "lamarina":2, "ColorType2":1,
       // "poudra2id":74908, "bafeio2id":303, "comments2":"comments2"}}]
 
+      debugger;
+
       const orderDataFront = orders.map((order) => ({
         Company: companySettings.company,
         BOption: 1,
@@ -65,7 +67,7 @@ export const useOrders = () => {
         TRDBRANCH: 1427,
         remarks: "",
         comments: order.colorValue,
-        mtrl: order.product?.sku || "",
+        mtrl: order.mtrl || "",
         QTY1: order.qty1,
         price: order.netamnt,
         CCCPOUDRAID:
@@ -95,7 +97,7 @@ export const useOrders = () => {
         TRDBRANCH: 1427,
         remarks: "",
         comments: order.colorValue,
-        mtrl: order.product?.sku || "",
+        mtrl: order.mtrl || "",
         QTY1: order.qty1,
         price: order.netamnt,
         CCCPOUDRAID:
