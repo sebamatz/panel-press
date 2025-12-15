@@ -102,16 +102,16 @@ export const useOrderTable = () => {
     cancelEdit();
   }, [cancelEdit]);
 
-  const handleSubmitOrders = useCallback(async () => {
-    try {
-      await submitOrders();
-      //reload the page
-      window.location.reload();
-      toast.success("Orders submitted successfully!");
-    } catch (error) {
-      toast.error("Failed to submit orders");
-    }
-  }, [submitOrders]);
+  // const handleSubmitOrders = useCallback(async () => {
+  //   try {
+  //     await submitOrders();
+  //     //reload the page
+  //     window.location.reload();
+  //     toast.success("Orders submitted successfully!");
+  //   } catch (error) {
+  //     toast.error("Failed to submit orders");
+  //   }
+  // }, [submitOrders]);
 
   // Column configurations
   const productColumn = useMemo(
@@ -352,7 +352,7 @@ export const useOrderTable = () => {
     handleEditInputChange,
     handleSaveEdit,
     handleCancelEdit,
-    handleSubmitOrders,
+    // handleSubmitOrders,
     handleGeneratePDF,
   };
 };

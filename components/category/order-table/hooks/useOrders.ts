@@ -119,6 +119,9 @@ export const useOrders = () => {
     const response = await submitOrdersApi(orderData);
     if (response.response.ok) {
       toast.success("Orders submitted successfully!");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } else {
       toast.error("Failed to submit orders");
     }
