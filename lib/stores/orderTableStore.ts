@@ -171,6 +171,8 @@ export const useOrderTableStore = create<OrderTableState>()(
             // Clear orders on successful submission
             state.clearOrders();
             set({ isSubmitting: false, submitError: null });
+            //reload the page
+            window.location.reload();
           } else {
             throw new Error("Failed to submit orders");
           }

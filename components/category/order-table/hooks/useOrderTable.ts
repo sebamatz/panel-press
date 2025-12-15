@@ -105,6 +105,8 @@ export const useOrderTable = () => {
   const handleSubmitOrders = useCallback(async () => {
     try {
       await submitOrders();
+      //reload the page
+      window.location.reload();
       toast.success("Orders submitted successfully!");
     } catch (error) {
       toast.error("Failed to submit orders");
