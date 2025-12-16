@@ -13,11 +13,8 @@ interface UseColorTypeSelectionsProps {
 export function useColorTypeSelections({
   isSecondary = false,
 }: UseColorTypeSelectionsProps = {}) {
-  const {
-    setColorTypes,
-    colorSelectionState,
-    setColorSelectionState,
-  } = useColorSelectionStore();
+  const { setColorTypes, colorSelectionState, setColorSelectionState } =
+    useColorSelectionStore();
 
   const profilColors = useColorSelectionStore((state) => state.profilColors);
   const colorTypes = useColorSelectionStore((state) => state.colorTypes);
@@ -143,12 +140,23 @@ export function useColorTypeSelections({
 
   const shouldShowColorTypeSelection = selectedTrdpgroup === 1;
   const shouldShowColorCodeInputOnly = selectedTrdpgroup !== 1;
+
   const shouldShowColorCodeInput = currentColorType === "3";
-  const shouldShowManufacturer = shouldShowColorTypeSelection && currentColorType && currentColorType !== "3";
+
+  // If color type is 3 or 4, don't show manufacturer
+
+  const shouldShowManufacturer =
+    shouldShowColorTypeSelection &&
+    currentColorType &&
+    currentColorType !== "3" &&
+    currentColorType !== "4";
+
+  // If color type is 3 or 4, don't show manufacturer colors
   const shouldShowManufacturerColors =
     shouldShowColorTypeSelection &&
     selectedManifacturer &&
-    currentColorType !== "3";
+    currentColorType !== "3" &&
+    currentColorType !== "4";
 
   return {
     colorTypes,
@@ -162,4 +170,3 @@ export function useColorTypeSelections({
     shouldShowManufacturerColors,
   };
 }
-
