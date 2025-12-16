@@ -114,6 +114,31 @@ export const useOrders = () => {
       }));
       orderData = orderDataBack;
     }
+    if (profilColors === profilColorsType.WHITE.colorType.toString()) {
+      const orderDataBack = orders.map((order) => ({
+        Company: companySettings.company,
+        BOption: 1,
+        TRDR: 6462,
+        TRDBRANCH: 1427,
+        remarks: "",
+        comments: order.colorValue,
+        mtrl: order.mtrl || "",
+        QTY1: order.qty1,
+        price: order.netamnt,
+        CCCPOUDRAID:
+          colorSelectionState[0]?.colorManifacturerValue?.ccCPOUDRAID,
+        CCCBAFIOID: colorSelectionState[0]?.selectedColorCompany,
+        commentS1: order.colorValue,
+        JToken: {
+          ColorType1: 4,
+          diastasi: order.dimension,
+          fora: order.dimension.fora,
+          gemisi: order.gemisi,
+          lamarina: order.lamarina,
+        },
+      }));
+      orderData = orderDataBack;
+    }
 
     console.log("orderDatac-useOrders", orderData);
     const response = await submitOrdersApi(orderData);
