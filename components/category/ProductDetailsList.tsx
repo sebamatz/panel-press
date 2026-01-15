@@ -20,6 +20,15 @@ interface ProductDetailsPanelProps {
   enabled?: boolean;
 }
 
+interface ProductDetails {
+  xdocname: string;
+  sku: string;
+  webName: string;
+  dimDesign: string;
+  imgUrl: string;
+  plaino: number;
+}
+
 export function ProductDetailsList({
   onSelectionChange,
 }: ProductDetailsPanelProps) {
@@ -70,15 +79,18 @@ export function ProductDetailsList({
     }
   };
 
-  const apiItems = (Array.isArray(items) ? items : []).map((item: any) => ({
-    id: item?.SKU ?? item?.sku ?? item?.id ?? item?.Id,
-    name: item?.SKU ?? item?.sku ?? String(item?.id ?? ""),
-    sku: item?.SKU ?? item?.sku ?? String(item?.id ?? ""),
-    webName: item?.WebName ?? item?.webName ?? String(item?.id ?? ""),
-    xdocname: item?.XDOCNAME ?? item?.xdocname ?? String(item?.id ?? ""),
-    imgUrl: item?.imgUrl ?? item?.ImgUrl ?? String(item?.id ?? ""),
-    dimDesign: item?.dimDesign ?? item?.DimDesign ?? String(item?.id ?? ""),
-  }));
+  const apiItems = (Array.isArray(items) ? items : []).map(
+    (item: ProductDetails) => ({
+      id: item.sku,
+      name: item?.sku ?? "",
+      sku: item.sku,
+      imgUrl: item.imgUrl,
+      dimDesign: item.dimDesign,
+      plaino: item.plaino ?? 0,
+      xdocname: item?.xdocname ?? "",
+      webName: item?.webName ?? "",
+    })
+  );
 
   return (
     <div className="space-y-4">
@@ -124,7 +136,9 @@ export function ProductDetailsList({
               <div className="relative min-w-10">
                 <Image
                   src={selectedItem.imgUrl}
-                  alt={selectedItem.name}
+                  alt={
+                    selectedItem.webName ?? selectedItem.name ?? "Product Image"
+                  }
                   width={50}
                   height={50}
                   className="rounded-md transition-transform duration-200 group-hover:scale-105"
