@@ -258,6 +258,9 @@ export const useOrderTable = () => {
       return;
     }
 
+    // Check if DUAL_COLOR is selected
+    const isDualColor = profilColors === profilColorsType.DUAL_COLOR.colorType.toString();
+
     // for each row in data, recalculate the price based on @PriceCell component
     for (let index = 0; index < data.length; index++) {
       const row = data[index];
@@ -271,6 +274,15 @@ export const useOrderTable = () => {
         row.product?.sku
       ) {
         try {
+          // If DUAL_COLOR, set price to 0
+          if (isDualColor) {
+            updateOrder(index, {
+              ...row,
+              netamnt: 0,
+            });
+            continue;
+          }
+
           const JToken: IGetPriceJToken = {
             TRDR: 480,
             Category:

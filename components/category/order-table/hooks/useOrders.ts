@@ -58,7 +58,7 @@ export const useOrders = () => {
       //  JToken:{"ColorType1":1, "diastasi":1, "fora":"Δεξιά", "gemisi":1, "lamarina":2, "ColorType2":1,
       // "poudra2id":74908, "bafeio2id":303, "comments2":"comments2"}}]
 
-      debugger;
+
 
       const orderDataFront = orders.map((order) => ({
         Company: companySettings.company,
@@ -90,6 +90,7 @@ export const useOrders = () => {
       orderData = orderDataFront;
     }
     if (profilColors === profilColorsType.COLOR.colorType.toString()) {
+
       const orderDataBack = orders.map((order) => ({
         Company: companySettings.company,
         BOption: 1,
@@ -115,6 +116,7 @@ export const useOrders = () => {
       orderData = orderDataBack;
     }
     if (profilColors === profilColorsType.WHITE.colorType.toString()) {
+
       const orderDataBack = orders.map((order) => ({
         Company: companySettings.company,
         BOption: 1,
