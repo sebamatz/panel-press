@@ -69,7 +69,7 @@ export const useOrders = () => {
         comments: order.colorValue,
         mtrl: order.mtrl || "",
         QTY1: order.qty1,
-        price: order.netamnt,
+        price: 0, // Price is always 0 for DUAL_COLOR (dichromy)
         CCCPOUDRAID:
           colorSelectionState[0]?.colorManifacturerValue?.ccCPOUDRAID,
         CCCBAFIOID: colorSelectionState[0].selectedColorCompany,
