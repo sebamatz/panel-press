@@ -37,7 +37,7 @@ export function useColorTypeSelections({
         colorValue: "",
         colorData: [],
       };
-      setColorSelectionState(newState);
+      setColorSelectionState?.(newState);
     },
     [colorSelectionState, setColorSelectionState, index]
   );
