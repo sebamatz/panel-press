@@ -22,34 +22,6 @@ export const useOrders = () => {
   });
 
   const submitOrders = async () => {
-    // [
-    //     {
-    //         "selectedTrdpgroup": 1,
-
-    //         "colorType": "2",
-    //         "selectedColorCompany": 6892,
-    //         "colorValue": "",
-    //         "selectedManifacturer": "16",
-
-    //         "colorManifacturerValue": {
-    //             "ccCPOUDRAID": "9243",
-    //             "sky": "521-SAHARA-CARAVAN"
-    //         }
-    //     },
-    //     {
-    //         "selectedTrdpgroup": 1,
-
-    //         "colorType": "1",
-    //         "selectedColorCompany": 6892,
-    //         "colorValue": "",
-    //         "selectedManifacturer": "17",
-
-    //         "colorManifacturerValue": {
-    //             "ccCPOUDRAID": "75200",
-    //             "sky": "7021-RAL-GREY"
-    //         }
-    //     }
-    // ]
 
     let orderData: any[] = [];
 
@@ -57,8 +29,6 @@ export const useOrders = () => {
       // [{Company: 20, BOption: 1, "TRDR":6462, "TRDBRANCH":1427, remarks: "remarks", comments: "comments", mtrl:10104, "QTY1":1, "price":456.4053, CCCPOUDRAID: 69411, CCCBAFIOID: 303, commentS1: "commentS1",
       //  JToken:{"ColorType1":1, "diastasi":1, "fora":"Δεξιά", "gemisi":1, "lamarina":2, "ColorType2":1,
       // "poudra2id":74908, "bafeio2id":303, "comments2":"comments2"}}]
-
-
 
       const orderDataFront = orders.map((order) => ({
         Company: companySettings.company,
@@ -76,10 +46,10 @@ export const useOrders = () => {
         commentS1: order.colorValue,
         JToken: {
           ColorType1: colorSelectionState[0].colorType,
-          diastasi: order.dimension,
-          fora: order.dimension.fora,
-          gemisi: order.gemisi,
-          lamarina: order.lamarina,
+          diastasi: order.dimension.UTBL03,
+          fora: order.fora,
+          gemisi: order.gemisi?.id,
+          lamarina: order.lamarina.id,
           ColorType2: colorSelectionState[1].colorType,
           poudra2id:
             colorSelectionState[1]?.colorManifacturerValue?.ccCPOUDRAID,
@@ -107,10 +77,10 @@ export const useOrders = () => {
         commentS1: order.colorValue,
         JToken: {
           ColorType1: colorSelectionState[0].colorType,
-          diastasi: order.dimension,
-          fora: order.dimension.fora,
-          gemisi: order.gemisi,
-          lamarina: order.lamarina,
+          diastasi: order.dimension.UTBL03,
+          fora: order.fora,
+          gemisi: order.gemisi?.id,
+          lamarina: order.lamarina?.id,
         },
       }));
       orderData = orderDataBack;
@@ -133,10 +103,10 @@ export const useOrders = () => {
         commentS1: order.colorValue,
         JToken: {
           ColorType1: 4,
-          diastasi: order.dimension,
-          fora: order.dimension.fora,
-          gemisi: order.gemisi,
-          lamarina: order.lamarina,
+          diastasi: order.dimension.UTBL03,
+          fora: order.fora,
+          gemisi: order.gemisi?.id,
+          lamarina: order.lamarina?.id,
         },
       }));
       orderData = orderDataBack;
